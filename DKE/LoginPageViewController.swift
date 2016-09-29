@@ -40,6 +40,7 @@ class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
        
         
         GIDSignIn.sharedInstance().uiDelegate = self
+        GIDSignIn.sharedInstance().signInSilently()
         
         FIRAuth.auth()?.addAuthStateDidChangeListener { auth, user in
             if(Data.googleUser != nil){

@@ -47,6 +47,18 @@ class WelcomePageViewController: UIViewController {
             
             Data.googleUser = GIDSignIn.sharedInstance().currentUser
             
+            if(data["major"] != nil){
+                Data.currentUser?.setMajor(data["major"] as! String)
+            }
+            
+            if(data["cities"] != nil){
+                Data.currentUser?.setCities(data["cities"] as! String)
+            }
+            if(data["address"] != nil){
+                Data.currentUser?.setAddress(data["address"] as! String)
+            }
+            
+            
             
             if(data["ProfilePicture"] != nil){
                 Data.currentUser?.setEncodedString(data["ProfilePicture"] as! String)

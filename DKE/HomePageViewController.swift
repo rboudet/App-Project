@@ -22,9 +22,11 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
     @IBOutlet weak var InformationTableView: UITableView!
     
     @IBOutlet weak var majorLabel: UILabel!
-    @IBOutlet weak var FacultyLabel: UILabel!
     @IBOutlet weak var NameLabel: UILabel!
     @IBOutlet weak var EmailLabel: UILabel!
+    @IBOutlet weak var AdressLabel: UILabel!
+    @IBOutlet weak var CitiesLabel: UILabel!
+    @IBOutlet weak var SnapchatLabel: UILabel!
     
     
     static var justEditedProfil : Bool?
@@ -69,29 +71,23 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         InformationTableView.backgroundColor = UIColor.whiteColor()
         InformationTableView.tableHeaderView = nil
         
-        NameLabel.hidden = true
-        EmailLabel.hidden = true
-        FacultyLabel.hidden = true
+       // NameLabel.hidden = true
+       // EmailLabel.hidden = true
+       // AdressLabel.hidden = true
+       // CitiesLabel.hidden = true
+       // SnapchatLabel.hidden = true
         
-        _ = Data.ref.child("users").child(Data.userID!).observeEventType(FIRDataEventType.Value, withBlock: { (snapshot) in
+        
+        self.EmailLabel.text = "Email : " + (Data.currentUser?.email)!
+        self.NameLabel.text = "Name : " + (Data.currentUser?.firstName)! + " " + Data.currentUser!.lastName!
+        self.majorLabel.text = "Major : " + (Data.currentUser?.major)!
+        self.AdressLabel.text = "Adress : " + (Data.currentUser?.Address)!
+        self.CitiesLabel.text = "Cities lived in : " + (Data.currentUser?.Cities)!
+
+        
+       /* _ = Data.ref.child("users").child(Data.userID!).observeEventType(FIRDataEventType.Value, withBlock: { (snapshot) in
             // we display the info that the user has already put on his profil
             let data = snapshot.value as! [String : AnyObject]
-            if(data["email"] != nil){
-                self.EmailLabel.text = "Email : " + (data["email"] as? String)!
-            }
-            
-            self.NameLabel.text = "Name : " + ((data["firstName"]) as? String)! + " " + ((data["lastName"]) as? String)!
-            
-            if(data["major"] == nil){
-                self.majorLabel.text = "Major : Not provided"
-            }
-            else {
-                self.majorLabel.text = "Major : " + (data["major"] as? String)!
-            }
-            
-            if(data["faculty"] != nil){
-                self.FacultyLabel.text = "Faculty : " + (data["faculty"] as? String)!
-            }
             
             if(data["Hobbies"] != nil){
                 self.Hobbies = data["Hobbies"] as! [String]
@@ -106,12 +102,12 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
             }
             
             self.InformationTableView.reloadData()
-        })
+        }) */
         
         
-        NameLabel.hidden = false
-        EmailLabel.hidden = false
-        FacultyLabel.hidden = false
+        //NameLabel.hidden = false
+       // EmailLabel.hidden = false
+       
         
         ProfilePicture.layer.borderWidth = 1
         ProfilePicture.layer.borderColor = UIColor.blackColor().CGColor
@@ -416,6 +412,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         
     }
     
+    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         if let pickerImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
@@ -446,6 +443,11 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         let newImage : UIImage  = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext();
         return newImage;
+    }
+    
+    
+    @IBAction func EditProfileTapped(sender: AnyObject) {
+        self.performSegueWithIdentifier("EditProfil", sender: nil)
     }
     
     

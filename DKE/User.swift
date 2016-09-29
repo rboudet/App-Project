@@ -12,10 +12,13 @@ class CurrentUser{
     var firstName : String?
     var lastName : String?
     var email : String?
-    var major : String?
+    var major = "Not Provided"
     var faculty : String?
     var profilePicture : UIImage?
     var encodedString : String?
+    var Address = "Not Provided"
+    var Cities = "Not Provided"
+    var snapchat = "Not Provided"
     
     init(Lastname : String, Firstname : String, email: String, major: String, faculty : String, profilePic : UIImage){
         self.firstName = Firstname
@@ -40,5 +43,19 @@ class CurrentUser{
     func setEncodedString(encoded : String){
         self.encodedString = encoded
     }
+    func setAddress(address : String){
+        self.Address = address
+    }
+    func setCities(cities : String){
+        self.Cities = cities
+    }
+    func setMajor( major : String){
+        self.major = major
+    }
+    
+    func setSnapchat( snapchat : String){
+        self.snapchat = snapchat
+    }
+    
 
 }

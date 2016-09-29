@@ -38,10 +38,10 @@ class BackTableViewController: UITableViewController {
         else if(indexPath.row == 3){
             cell = tableView.dequeueReusableCellWithIdentifier("cell4", forIndexPath: indexPath) as UITableViewCell
             if (!isDKEHistoryListOpen){
-                cell?.textLabel!.text = "> DKE History"
+                cell?.textLabel!.text = "+ DKE History"
             }
             else{
-                cell?.textLabel!.text = "^ DKE History"
+                cell?.textLabel!.text = "- DKE History"
             }
         }
         
@@ -127,7 +127,7 @@ class BackTableViewController: UITableViewController {
         }
         else {
             isDKEHistoryListOpen = false
-            self.numberOfCells = 6
+            self.numberOfCells = 7
             self.DeployedCells = 0
             LinkCellTableView.reloadData()
         }

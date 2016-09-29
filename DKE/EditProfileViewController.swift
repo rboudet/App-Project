@@ -8,6 +8,7 @@
 
 import UIKit
 import Firebase
+import BRYXBanner
 
 
 class EditProfileViewController: UIViewController {
@@ -20,7 +21,6 @@ class EditProfileViewController: UIViewController {
     @IBOutlet weak var AdressTextField: UITextField!
     @IBOutlet weak var NameLabel: UILabel!
     
-    @IBOutlet weak var errorLabel: UILabel!
     var isGoogleAccount = false
     var currentEmail = ""
                      
@@ -28,9 +28,16 @@ class EditProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.errorLabel.hidden = true
+        self.EmailLabel.text = Data.currentUser?.email
+        self.NameLabel.text = (Data.currentUser?.firstName)! + " " + (Data.currentUser?.lastName)!
+        self.NewMajorTextField.text = Data.currentUser?.major
+        self.AdressTextField.text = Data.currentUser?.Address
+        self.CitiesTextField.text = Data.currentUser?.Cities
+        self.SnapchatTextField.text = Data.currentUser?.snapchat
+
         
-        _ = Data.ref.child("users").child(Data.userID!).observeEventType(FIRDataEventType.Value, withBlock: { (snapshot) in
+        
+    /*    _ = Data.ref.child("users").child(Data.userID!).observeEventType(FIRDataEventType.Value, withBlock: { (snapshot) in
             var data = snapshot.value as! [String : AnyObject]
             
     
@@ -49,7 +56,7 @@ class EditProfileViewController: UIViewController {
             if(data["AccountType"] != nil && data["AccountType"] as! String == "Google" ){
                 self.isGoogleAccount = true
             }
-        })
+        }) */
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -68,10 +75,13 @@ class EditProfileViewController: UIViewController {
         
         let newEmail = EmailLabel.text
         let newMajor = NewMajorTextField.text
-        let Adress = AdressTextField.text
+        let Address = AdressTextField.text
         let cities = CitiesTextField.text
-        let snapchat = SnapchatTextField.text
-        if(newMajor != "" && newMajor != "Not provided"){
+        var snapchat = SnapchatTextField.text
+        if (snapchat == nil){
+            snapchat = "Not Provided"
+        }
+        if(newMajor != "" && newMajor != "Not provided" && cities != "" && Address != ""){
             if(!self.isGoogleAccount){
                 Data.user?.updateEmail(newEmail!) { error in
                     if error != nil {
@@ -83,12 +93,22 @@ class EditProfileViewController: UIViewController {
                     else {
                         HomePageViewController.justEditedProfil = true
                         self.performSegueWithIdentifier("EditProfilToProfil", sender: nil)
-                        Data.ref.child("users").child(Data.userID!).updateChildValues(["email" : newEmail!, "major" : newMajor!, "profileCompleted" : "true"])
+                        Data.ref.child("users").child(Data.userID!).updateChildValues(["email" : newEmail!, "major" : newMajor!, "profileCompleted" : "true", "address" : Address!, "cities" : cities!, "snapchat" : snapchat!])
+                        Data.currentUser?.setCities(cities!)
+                        Data.currentUser?.setAddress(Address!)
+                        Data.currentUser?.setMajor(newMajor!)
+                        Data.currentUser?.setSnapchat(snapchat!)
+                        
                     }
                 }
             }
             else{
-                Data.ref.child("users").child(Data.userID!).updateChildValues(["major" : newMajor!, "profileCompleted" : "true"])
+                Data.ref.child("users").child(Data.userID!).updateChildValues(["major" : newMajor!, "profileCompleted" : "true", "address" : Address!, "cities" : cities!, "snapchat" : snapchat!])
+                
+                Data.currentUser?.setCities(cities!)
+                Data.currentUser?.setAddress(Address!)
+                Data.currentUser?.setMajor(newMajor!)
+                
                 if(newEmail! != self.currentEmail){
                     let alert = UIAlertController(title: "Warning", message: "You are logged in with gmail, you cannot change your email. The rest of your information has been updated", preferredStyle: UIAlertControllerStyle.Alert)
                     alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.Default, handler: nil))
@@ -105,7 +125,9 @@ class EditProfileViewController: UIViewController {
             }
         }
         else{
-            self.errorLabel.hidden = false
+            let banner = Banner(title: "Error", subtitle: "Some mandatory fields were left empty", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:174.00/255.0, green:48.0/255.0, blue:51.5/255.0, alpha:1.000))
+            banner.dismissesOnTap = true
+            banner.show(duration: 3.0)
         }
     }
     
