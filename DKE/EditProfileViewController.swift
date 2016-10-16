@@ -66,12 +66,12 @@ class EditProfileViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        super.touchesBegan(touches, withEvent: event)
+        super.touchesBegan(touches, with: event)
     }
 
-    @IBAction func SaveProfileButtonTapped(sender: AnyObject) {
+    @IBAction func SaveProfileButtonTapped(_ sender: AnyObject) {
         
         let newEmail = EmailLabel.text
         let newMajor = NewMajorTextField.text
@@ -85,14 +85,10 @@ class EditProfileViewController: UIViewController {
             if(!self.isGoogleAccount){
                 Data.user?.updateEmail(newEmail!) { error in
                     if error != nil {
-                        print(ErrorType)
-                        let alert = UIAlertController(title: "Error", message: "could not update email", preferredStyle: UIAlertControllerStyle.Alert)
-                        alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.Default, handler: nil))
-                        self.presentViewController(alert, animated: true, completion: nil)
                     }
                     else {
                         HomePageViewController.justEditedProfil = true
-                        self.performSegueWithIdentifier("EditProfilToProfil", sender: nil)
+                        self.performSegue(withIdentifier: "EditProfilToProfil", sender: nil)
                         Data.ref.child("users").child(Data.userID!).updateChildValues(["email" : newEmail!, "major" : newMajor!, "profileCompleted" : "true", "address" : Address!, "cities" : cities!, "snapchat" : snapchat!])
                         Data.currentUser?.setCities(cities!)
                         Data.currentUser?.setAddress(Address!)
@@ -110,15 +106,15 @@ class EditProfileViewController: UIViewController {
                 Data.currentUser?.setMajor(newMajor!)
                 
                 if(newEmail! != self.currentEmail){
-                    let alert = UIAlertController(title: "Warning", message: "You are logged in with gmail, you cannot change your email. The rest of your information has been updated", preferredStyle: UIAlertControllerStyle.Alert)
-                    alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.Default, handler: nil))
+                    let alert = UIAlertController(title: "Warning", message: "You are logged in with gmail, you cannot change your email. The rest of your information has been updated", preferredStyle: UIAlertControllerStyle.alert)
+                    alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
                     HomePageViewController.justEditedProfil = true
-                    self.presentViewController(alert, animated: true, completion: goToProfil)
+                    self.present(alert, animated: true, completion: goToProfil)
 
                 }
                 else{
                     HomePageViewController.justEditedProfil = true
-                    self.performSegueWithIdentifier("EditProfilToProfil", sender: nil)
+                    self.performSegue(withIdentifier: "EditProfilToProfil", sender: nil)
                 }
                 
                 
@@ -134,10 +130,10 @@ class EditProfileViewController: UIViewController {
  
     
     func goToProfil(){
-        self.performSegueWithIdentifier("EditProfilToProfil", sender: nil)
+        self.performSegue(withIdentifier: "EditProfilToProfil", sender: nil)
     }
     
-    @IBAction func BackButtonTapped(sender: AnyObject) {
+    @IBAction func BackButtonTapped(_ sender: AnyObject) {
         
         goToProfil()
     }

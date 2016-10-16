@@ -10,6 +10,8 @@ import UIKit
 
 class MyCustomCell2: UITableViewCell {
 
-    @IBOutlet weak var AddHobbyButton: UIButton!
+    @IBOutlet weak var EventTitleLabel: UILabel!
+    @IBOutlet weak var OrganisatorLabel: UILabel!
+    @IBOutlet weak var GoingButton: UIButton!
     
 }

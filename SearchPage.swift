@@ -20,8 +20,7 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
     
     @IBOutlet weak var Open: UIBarButtonItem!
     @IBOutlet var ListOfUsers: UITableView!
-    var currentCell = MyCustomCell.init(style: .Default, reuseIdentifier: "cell")
-    var test = Array<Array<String>>()
+    var currentCell = MyCustomCell.init(style: .default, reuseIdentifier: "cell")
     var dict = [[String:String]]()
     var users = [] as [String]
     var majors = [] as [String]
@@ -38,6 +37,9 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
     
     override func viewDidLoad() {
     
+        let nav = self.navigationController?.navigationBar
+        nav?.barStyle = UIBarStyle.blackTranslucent
+        
         let searchBar = UISearchBar()
         searchBar.sizeToFit()
         searchBar.placeholder = "Search Names and Majors"
@@ -55,20 +57,20 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         if (self.revealViewController() != nil){
             
             Open.target = self.revealViewController()
-            Open.action = "revealToggle:"
+            Open.action = #selector(SWRevealViewController.revealToggle(_:))
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
         self.ListOfUsers.tableHeaderView = UIView()
         self.ListOfUsers.tableFooterView = UIView()
         
-        Data.ref.child("users").observeEventType(.ChildAdded, withBlock: { (snapshot) -> Void in
+        Data.ref.child("users").observe(.childAdded, with: { (snapshot) -> Void in
             let data = snapshot.value as! [String : AnyObject]
             let firstName = data["firstName"] as! String
             let lastName = data["lastName"] as! String
             let name = firstName + " " + lastName
             let firstChar = firstName[firstName.startIndex]
-            let firstLetter = String(firstChar).uppercaseString
+            let firstLetter = String(firstChar).uppercased()
             let uid = data["uid"] as! String
             let major : String?
             if (data["major"] == nil){
@@ -79,19 +81,18 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
             }
             self.dict.append(["firstLetter" : firstLetter, "uid": uid, "name" : name, "major" : major! , "EncodedString" : data["ProfilePicture"] as! String])
             
-            self.dict = self.dict.sort{($0["name"]!).localizedCompare($1["name"]!) == NSComparisonResult.OrderedAscending}
+            self.dict = self.dict.sorted{($0["name"]!).localizedCompare($1["name"]!) == ComparisonResult.orderedAscending}
             
             
             if(!self.sections.contains(firstLetter)){
                 self.sections.append(firstLetter)
                 // we add in the sections array all the first letters of the names if they are not already in the array
             }
-
             self.ListOfUsers.reloadData()
         })
         
         
-        Data.ref.child("users").observeEventType(.ChildChanged, withBlock: { (snapshot) -> Void in
+        Data.ref.child("users").observe(.childChanged, with: { (snapshot) -> Void in
             let data = snapshot.value as! [String : AnyObject]
             for i in 0...self.dict.count-1{
                 if (self.dict[i]["name"]! == (data["firstName"] as! String) + " " + (data["lastName"] as! String)){
@@ -100,84 +101,31 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
                 }
             }
             
-
             self.ListOfUsers.reloadData()
         })
         
-        Data.ref.observeEventType(.ChildRemoved, withBlock: { (snapshot) -> Void in
+        
+        
+        Data.ref.observe(.childRemoved, with: { (snapshot) -> Void in
             //self.ListOfUsers.reloadData()
         })
         
-        
-     /*   _ = Data.ref.observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
-            let data = snapshot.value as! [String : AnyObject]
-            self.list = data["list"] as! [String]
-            // here list represents a list of all the user's ID that have registered
-            self.users = self.list
-            self.majors = self.list
-            self.uid = self.list
-            self.names = self.list
-            // we set all these arrays to be the same as list to have the correct length
-            var iterations = 0
-            if(self.users.count != 0){
-                for i in 0...self.users.count-1{
-                    // then we iterate through all the users, and retreive their profile information
-                    Data.ref.child("users").child(self.users[i]).observeSingleEventOfType(.Value, withBlock: { (snapshot2) in
-                        let data2 = snapshot2.value as! [String : AnyObject]
-                        let firstName = data2["firstName"] as! String
-                        let lastName = data2["lastName"] as! String
-                        let major = data2["major"]
-                        let encodedPictureString = data2["ProfilePicture"] as! String
-                        self.names[i] = firstName + " " + lastName
-                        if(data2["major"] == nil){
-                            self.majors[i] = ""
-                        }
-                        else{
-                            self.majors[i] = major as! String
-                        }
-                        
-                        let firstChar = firstName[firstName.startIndex]
-                        let firstLetter = String(firstChar).uppercaseString
-                        // we take the first character of the name to create the section array
-                        if(!self.sections.contains(firstLetter)){
-                            self.sections.append(firstLetter)
-                            // we add in the sections array all the first letters of the names if they are not already in the array
-                        }
-                        
-                        self.dict.append(["firstLetter" : firstLetter, "uid": self.users[i], "name" : self.names[i], "major" : self.majors[i], "EncodedString" : encodedPictureString])
-                        // dict will contain all the information we need, it is an array of dictionnaries
-                        self.dict = self.dict.sort{($0["name"]!).localizedCompare($1["name"]!) == NSComparisonResult.OrderedAscending}
-                        // we then sort the array
-                        iterations = iterations + 1
-                        if(iterations ==  self.users.count){
-                            self.ListOfUsers.reloadData()  // we reload the data, once the array has been filled with all the data
-                        }
-                        
-                    })
-                }
-            }
-
-            
-        })*/
-        
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-      
-        
 
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         var number = 0
-        self.sections = self.sections.sort({$0 < $1})
+        self.sections = self.sections.sorted(by: {$0 < $1})
         // we sorte the section array, to have the sections in alphabetical order
         if(dict.count != 0 && test2 != "true"){
             let letter = sections[section]
             for i in 0...dict.count-1{
                 
-                if(dict[i]["firstLetter"]!.caseInsensitiveCompare(letter) == NSComparisonResult.OrderedSame){
+                if(dict[i]["firstLetter"]!.caseInsensitiveCompare(letter) == ComparisonResult.orderedSame){
                     number = number + 1
                     // we count how many names start with the letter so that we know many cells are going to be needed
                 }
@@ -189,13 +137,13 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
     
     
     
-    override func tableView(tableView : UITableView, cellForRowAtIndexPath indexPath : NSIndexPath) -> UITableViewCell{
+    override func tableView(_ tableView : UITableView, cellForRowAt indexPath : IndexPath) -> UITableViewCell{
         var currentDict = [[String:String]]()
         var currentSection = [] as [String]
         index = 0
-        let cell:MyCustomCell = self.tableView.dequeueReusableCellWithIdentifier("UserCell") as! MyCustomCell
-        cell.cellLabel.hidden = true
-        let sectionNumber = indexPath.section
+        let cell:MyCustomCell = self.tableView.dequeueReusableCell(withIdentifier: "UserCell") as! MyCustomCell
+        cell.cellLabel.isHidden = true
+        let sectionNumber = (indexPath as NSIndexPath).section
         if (isSearching){
             currentDict = self.searchDict
             currentSection = self.searchSections
@@ -206,27 +154,28 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         }
         
         if(dict.count != 0){
-            while(!(currentDict[index]["firstLetter"]!.caseInsensitiveCompare(currentSection[sectionNumber]) == NSComparisonResult.OrderedSame) && index < currentDict.count){
+            while(!(currentDict[index]["firstLetter"]!.caseInsensitiveCompare(currentSection[sectionNumber]) == ComparisonResult.orderedSame) && index < currentDict.count){
                 index = index + 1
                 
                 // once we change sections, we get the index of the first name that has the same letter as the section
             }
             
-            if(currentDict[index + indexPath.row]["firstLetter"]!.caseInsensitiveCompare(currentSection[sectionNumber
-                ]) == NSComparisonResult.OrderedSame && index < currentDict.count){
+            if(currentDict[index + (indexPath as NSIndexPath).row]["firstLetter"]!.caseInsensitiveCompare(currentSection[sectionNumber
+                ]) == ComparisonResult.orderedSame && index < currentDict.count){
                 
-                cell.cellTitle.text = currentDict[index + indexPath.row]["name"]
-                cell.cellSubtitle.text = currentDict[index + indexPath.row]["major"]
-                cell.cellLabel.text = currentDict[index + indexPath.row]["uid"]
+                cell.cellTitle.text = currentDict[index + (indexPath as NSIndexPath).row]["name"]
+                cell.cellSubtitle.text = currentDict[index + (indexPath as NSIndexPath).row]["major"]
+                cell.cellLabel.text = currentDict[index + (indexPath as NSIndexPath).row]["uid"]
                 
-                let dataDecoded = NSData(base64EncodedString: currentDict[index + indexPath.row]["EncodedString"]!, options: NSDataBase64DecodingOptions.IgnoreUnknownCharacters)!
+                let dataDecoded = Foundation.Data(base64Encoded: currentDict[index + (indexPath as NSIndexPath).row]["EncodedString"]!, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)!
                 
                 let profilePhoto = UIImage(data: dataDecoded)
                 
 
                 cell.cellProfilePicture.layer.borderWidth = 1
-                cell.cellProfilePicture.layer.borderColor = UIColor.blackColor().CGColor
-                cell.cellProfilePicture.layer.cornerRadius = cell.cellProfilePicture.frame.size.width/15
+                cell.cellProfilePicture.layer.borderColor = UIColor.black.cgColor
+                cell.cellProfilePicture.layer.cornerRadius = 3.6
+                    //cell.cellProfilePicture.frame.size.width/15
                 cell.cellProfilePicture.clipsToBounds = true
                 cell.cellProfilePicture.image = profilePhoto
                 
@@ -238,7 +187,7 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
 
     }
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         var numSections : Int?
         if ( self.isSearching){
             numSections = self.searchSections.count
@@ -249,7 +198,7 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         return numSections!
     }
     
-    override func sectionIndexTitlesForTableView(tableView: UITableView) -> [String]? {
+    override func sectionIndexTitles(for tableView: UITableView) -> [String]? {
         var section = [] as [String]
         if(isSearching){
             section = self.searchSections
@@ -258,11 +207,11 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
             section = self.sections
         }
         
-        section = section.sort({$0 < $1})
+        section = section.sorted(by: {$0 < $1})
         return section
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         var currentSections = [] as [String]
         if (isSearching){
             currentSections = self.searchSections
@@ -273,24 +222,23 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         return currentSections[section]
     }
     
-    override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
-        let cell = ListOfUsers.cellForRowAtIndexPath(indexPath)
+    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        let cell = ListOfUsers.cellForRow(at: indexPath)
         self.currentCell = cell as! MyCustomCell
         // we set the current cell to be the cell that we are going to select
         return indexPath
     }
  
-    
-    func searchDisplayControllerDidBeginSearch(controller: UISearchDisplayController) {
+    func searchDisplayControllerDidBeginSearch(_ controller: UISearchDisplayController) {
         self.isSearching = true
     }
     
     
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         self.filterBrothersForSearchString(searchText)
     }
     
-    func filterBrothersForSearchString(searchText : String){
+    func filterBrothersForSearchString(_ searchText : String){
         if (searchText == ""){
             self.isSearching = false
             self.tableView.reloadData()
@@ -305,7 +253,7 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         }
         self.searchDict = self.dict.filter({( user: [String:String]) -> Bool in
             // to start, let's just search by name
-            return (user["name"]!.lowercaseString.rangeOfString(searchText.lowercaseString) != nil) || (user["major"]!.lowercaseString.rangeOfString(searchText.lowercaseString) != nil)
+            return (user["name"]!.lowercased().range(of: searchText.lowercased()) != nil) || (user["major"]!.lowercased().range(of: searchText.lowercased()) != nil)
         })
         
         if (self.searchDict.count > 0){
@@ -320,14 +268,14 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         
     }
     
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.isSearching = false
         self.searchDict = [[String : String]]()
         self.sections = [] as [String]
         self.tableView.reloadData()
     }
     
-    func searchBarSearchButtonClicked(searchBar: UISearchBar) {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         self.isSearching = true
         let text = searchBar.text
         self.filterBrothersForSearchString(text!)
@@ -336,25 +284,25 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
 
     
 
-    @IBAction func CancelButtonTapped(sender: AnyObject) {
+    @IBAction func CancelButtonTapped(_ sender: AnyObject) {
         self.presentSearchBar?.resignFirstResponder()
     }
     
     
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         if (segue.identifier == "CellToProfil") {
-            let svc = segue.destinationViewController as! ViewProfilViewController;
+            let svc = segue.destination as! ViewProfilViewController;
             svc.toPass = currentCell.cellLabel.text!
         }
     }
     
     
     // to leave the search bar keyboard
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        super.touchesBegan(touches, withEvent: event)
+        super.touchesBegan(touches, with: event)
         
     }
 }

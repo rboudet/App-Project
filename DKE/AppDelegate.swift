@@ -10,6 +10,8 @@ import UIKit
 import Firebase
 import GoogleSignIn
 import GoogleAPIClient
+import FirebaseMessaging
+
 
 
 @UIApplicationMain
@@ -17,37 +19,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
 
     var window: UIWindow?
     var currentList = [] as [String]
-    private let kKeychainItemName = "Google Calendar API"
+    fileprivate let kKeychainItemName = "Google Calendar API"
     
-    private let kClientID = "464162409429-k3kb5k3ldic0knqbt5ad8h3olfd67va6.apps.googleusercontent.com"
+    fileprivate let kClientID = "464162409429-k3kb5k3ldic0knqbt5ad8h3olfd67va6.apps.googleusercontent.com"
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let settings: UIUserNotificationSettings =
-            UIUserNotificationSettings(forTypes: [.Alert, .Badge, .Sound], categories: nil)
+            UIUserNotificationSettings(types: [.alert, .badge, .sound], categories: nil)
         application.registerUserNotificationSettings(settings)
-        application.registerForRemoteNotifications()
         
         FIRApp.configure()
         
         GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
         GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().signInSilently()
-        GIDSignIn.sharedInstance().scopes.append(kGTLAuthScopeCalendar)
+        //GIDSignIn.sharedInstance().signInSilently()
         GIDSignIn.sharedInstance().scopes.append("https://www.googleapis.com/auth/userinfo.profile")
         FIRDatabase.database().persistenceEnabled = true
 
         return true
     }
     
-    func application(application: UIApplication, openURL url: NSURL, options: [String: AnyObject]) -> Bool {
-        return GIDSignIn.sharedInstance().handleURL(url,sourceApplication: options[UIApplicationOpenURLOptionsSourceApplicationKey] as? String, annotation: options[UIApplicationOpenURLOptionsAnnotationKey])
+    func application(_ application: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey: Any]) -> Bool {
+        return GIDSignIn.sharedInstance().handle(url,sourceApplication: options[UIApplicationOpenURLOptionsKey.sourceApplication] as? String, annotation: options[UIApplicationOpenURLOptionsKey.annotation])
         
     }
     
-    func application(application: UIApplication,openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
-        var options : [String: AnyObject] = [UIApplicationOpenURLOptionsSourceApplicationKey: sourceApplication!, UIApplicationOpenURLOptionsAnnotationKey: annotation]
-        return GIDSignIn.sharedInstance().handleURL(url, sourceApplication: sourceApplication, annotation: annotation)
+    func application(_ application: UIApplication,open url: URL, sourceApplication: String?, annotation: Any) -> Bool {
+        var options : [String: AnyObject] = [UIApplicationOpenURLOptionsKey.sourceApplication.rawValue: sourceApplication! as AnyObject, UIApplicationOpenURLOptionsKey.annotation.rawValue: annotation as AnyObject]
+        return GIDSignIn.sharedInstance().handle(url, sourceApplication: sourceApplication, annotation: annotation)
     }
     
 
@@ -56,8 +56,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     
     
-    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject],
-                     fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable: Any],
+                     fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         // If you are receiving a notification message while your app is in the background,
         // this callback will not be fired till the user taps on the notification launching the application.
         // TODO: Handle data of notification
@@ -70,10 +70,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     }
     
     
-    func signIn(signIn: GIDSignIn!, didSignInForUser user: GIDGoogleUser!, withError error: NSError!) {
-        LoginPageViewController.indicator.hidden = false
+    func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
+        LoginPageViewController.indicator.isHidden = false
         LoginPageViewController.indicator.startAnimating()
-        LoginPageViewController.indicator.backgroundColor = UIColor.whiteColor()
+        LoginPageViewController.indicator.backgroundColor = UIColor.white
         
         if let error = error {
             print(error.localizedDescription)
@@ -85,92 +85,107 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         let givenName = user.profile.givenName
         let familyName = user.profile.familyName
         let email = user.profile.email
-        
-        let photoUrl = user.profile.imageURLWithDimension(70)
-        let photoData = NSData(contentsOfURL: photoUrl)
-        // the encodedString is what will be stored in firebase (cannot store images)
-        let photo = UIImage(data: photoData!)
-        let encodedString = photoData?.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
-        
-        
-        Data.currentUser = CurrentUser(Lastname: familyName!, Firstname: givenName!, email: email!, profilePic : photo! )
-        Data.accessToken = authentication.accessToken
-        Data.refreshToken = authentication.refreshToken
-        Data.expires = authentication.accessTokenExpirationDate
+        Data.currentUser = CurrentUser(Lastname: familyName!, Firstname: givenName!, email: email!)
+        Data.accessToken = (authentication?.accessToken)!
+        Data.refreshToken = (authentication?.refreshToken)!
+        Data.expires = authentication!.accessTokenExpirationDate
         Data.googleUser = user
         
-        let credential = FIRGoogleAuthProvider.credentialWithIDToken(authentication.idToken,accessToken: authentication.accessToken)
+        let credential = FIRGoogleAuthProvider.credential(withIDToken: (authentication?.idToken)!,accessToken: (authentication?.accessToken)!)
         
-        FIRAuth.auth()?.signInWithCredential(credential) { (user, error) in
+        FIRAuth.auth()?.signIn(with: credential) { (user, error) in
             Data.userID = FIRAuth.auth()?.currentUser?.uid
             if error != nil{
                 print(error)
             }
             
             else {
-                Data.ref.observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
-                    let data = snapshot.value as! [String : AnyObject]
-                    
-                    print(data["list"])
-                    if(data["list"] == nil){
-                        let list = [Data.userID!]
-                        Data.ref.updateChildValues(["list" : list])
-                        Data.ref.child("users").child(Data.userID!).setValue(["firstName": givenName!, "lastName" : familyName!, "email": email!, "AccountType" : "Google", "ProfilePicture" : encodedString!, "uid": Data.userID!])
-                        
-                    }
-                    else {
-                        self.currentList = data["list"] as! [String]
-                        if( !(self.currentList.contains(Data.userID!))){
-                            self.currentList.append(Data.userID!)
-                            print("current list : ")
-                            print(self.currentList)
-                            print(Data.userID!)
-                            Data.ref.updateChildValues(["list" : self.currentList])
-                            Data.ref.child("users").child(Data.userID!).setValue(["firstName": givenName!, "lastName" : familyName!, "email": email!, "AccountType" : "Google", "ProfilePicture" : encodedString!, "uid": Data.userID!])
-                            
-                        }
-                        
-                       
-                    }
-                })
+                Data.ref.child("users").child(Data.userID!).updateChildValues(["firstName": givenName!, "lastName" : familyName!, "email": email!, "AccountType" : "Google", "uid": Data.userID!])
             }
             
+            Data.ref.child("users").child(Data.userID!).observe(FIRDataEventType.value, with: { (snapshot) in
+                // we display the info that the user has already put on his profil
+                let data = snapshot.value as! [String : AnyObject]
+                if( data["ProfilePicture"] != nil){
+                    let photoString = data["ProfilePicture"] as! String
+                    Data.currentUser?.setEncodedString(photoString)
+                    let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+                    let decodedImage = UIImage(data: decodedData!)
+                    Data.currentUser?.setPhoto(decodedImage!)
+                    
+                }
+                else {
+                    let photoUrl = Data.googleUser!.profile.imageURL(withDimension: 70)
+                    let photoData = try? Foundation.Data(contentsOf: photoUrl!)
+                    // the encodedString is what will be stored in firebase (cannot store images)
+                    let photo = UIImage(data: photoData!)
+                    let encodedString = photoData?.base64EncodedString(options: .lineLength64Characters)
+                    Data.ref.child("users").child(Data.userID!).updateChildValues(["ProfilePicture" : encodedString!])
+                    
+                    Data.currentUser?.setEncodedString(encodedString!)
+                    Data.currentUser?.setPhoto(photo!)
+                }
+                if(data["major"] != nil){
+                    Data.currentUser?.setMajor(data["major"] as! String)
+                }
+                
+                if(data["cities"] != nil){
+                    Data.currentUser?.setCities(data["cities"] as! String)
+                }
+                if(data["address"] != nil){
+                    Data.currentUser?.setAddress(data["address"] as! String)
+                }
+            })
             
+          }
+        
+
         }
         
-    }
-    
-    func signIn(signIn: GIDSignIn!, didDisconnectWithUser user:GIDGoogleUser!,
-                withError error: NSError!) {
+    func sign(_ signIn: GIDSignIn!, didDisconnectWith user:GIDGoogleUser!,
+                withError error: Error!) {
         print("user has disconnected")
         // Perform any operations when the user disconnects from app here.
         // ...
     }
-
+    
+  
+ /*    func tokenRefreshNotification(_ notification: Notification) {
+        if let refreshedToken = FIRInstanceID.instanceID().token() {
+            print("InstanceID token: \(refreshedToken)")
+        }
+        
+        // Connect to FCM since connection may have failed when attempted before having a token.
+        connectToFcm()
+    }*/
+ 
+    
+    
+    
     
     
     
   
 
-    func applicationWillResignActive(application: UIApplication) {
+    func applicationWillResignActive(_ application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
+    func applicationDidEnterBackground(_ application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
+    func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
+    func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
 
-    func applicationWillTerminate(application: UIApplication) {
+    func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
 

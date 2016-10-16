@@ -32,24 +32,24 @@ class SignUpPageViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        super.touchesBegan(touches, withEvent: event)
+        super.touchesBegan(touches, with: event)
     }
 
     
     
-    @IBAction func SignUpButtonTapped(sender: AnyObject) {
+    @IBAction func SignUpButtonTapped(_ sender: AnyObject) {
         
         let email = emailTextField.text
         let password = passwordTextField.text
         let firstName = firstNameTextField.text
         let lastName = lastNameTextField.text
         
-        FIRAuth.auth()?.createUserWithEmail(email!, password: password!) { (user, error) in
+        FIRAuth.auth()?.createUser(withEmail: email!, password: password!) { (user, error) in
             if (error == nil){
                 self.ref.child("users").child(user!.uid).setValue(["firstName": firstName!, "lastName" : lastName!, "email": email!])
-                self.ref.observeSingleEventOfType(FIRDataEventType.Value, withBlock: { (snapshot) in
+                self.ref.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
                     let userID = FIRAuth.auth()?.currentUser?.uid
                     let data = snapshot.value as! [String : AnyObject]
                     if(data["list"] == nil){
@@ -65,14 +65,14 @@ class SignUpPageViewController: UIViewController {
 
                     })
                
-                self.performSegueWithIdentifier("SignUpToTabMenu", sender: nil)
+                self.performSegue(withIdentifier: "SignUpToTabMenu", sender: nil)
 
             }
             else {
                 
-                let alert = UIAlertController(title: "Error", message: "Your inputs are invalid, please enter valid information", preferredStyle: UIAlertControllerStyle.Alert)
-                alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.Default, handler: nil))
-                self.presentViewController(alert, animated: true, completion: nil)
+                let alert = UIAlertController(title: "Error", message: "Your inputs are invalid, please enter valid information", preferredStyle: UIAlertControllerStyle.alert)
+                alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
 
                 
             }
@@ -80,9 +80,9 @@ class SignUpPageViewController: UIViewController {
     }
 
     func goToHome(){
-        let HomePage = self.storyboard?.instantiateViewControllerWithIdentifier("HomePageViewController") as! HomePageViewController
+        let HomePage = self.storyboard?.instantiateViewController(withIdentifier: "HomePageViewController") as! HomePageViewController
         let HomePageNav = UINavigationController(rootViewController: HomePage)
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.window?.rootViewController = HomePageNav
         
     }

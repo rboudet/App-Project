@@ -23,12 +23,12 @@ class DatePickerPageViewController: UIViewController {
         
         if(DatePickerPageViewController.toPass == "end"){
             if(CreateEventPageViewController.isFullDayEvent){
-                dpDatePicker.datePickerMode = UIDatePickerMode.Date
+                dpDatePicker.datePickerMode = UIDatePickerMode.date
             }
             else {
-                dpDatePicker.datePickerMode = UIDatePickerMode.DateAndTime
+                dpDatePicker.datePickerMode = UIDatePickerMode.dateAndTime
             }
-            dpDatePicker.date = CreateEventPageViewController.startDtEvent!
+            dpDatePicker.date = CreateEventPageViewController.startDtEvent! as Date
              barItemToggleDatePicker.title = ""
         }
 
@@ -41,7 +41,7 @@ class DatePickerPageViewController: UIViewController {
     }
     
     
-    @IBAction func acceptSelectedDate(sender: AnyObject) {
+    @IBAction func acceptSelectedDate(_ sender: AnyObject) {
     
         if(DatePickerPageViewController.toPass == "start"){
             CreateEventPageViewController.startDtEvent = dpDatePicker.date
@@ -50,41 +50,41 @@ class DatePickerPageViewController: UIViewController {
         
             CreateEventPageViewController.startStrEventDate = getStringFromDate(dpDatePicker.date)
             // Remove the view with the date picker from the self.view.
-            self.performSegueWithIdentifier("DatePickerToEvent", sender: nil)
+            self.performSegue(withIdentifier: "DatePickerToEvent", sender: nil)
         }
         else if(DatePickerPageViewController.toPass == "end"){
              CreateEventPageViewController.endDtEvent = dpDatePicker.date
              CreateEventPageViewController.endStrEventDate = getStringFromDate(dpDatePicker.date)
-             self.performSegueWithIdentifier("DatePickerToEvent", sender: nil)
+             self.performSegue(withIdentifier: "DatePickerToEvent", sender: nil)
         }
         
     }
     
     
-    @IBAction func cancelPickingDate(sender: AnyObject) {
-        self.performSegueWithIdentifier("DatePickerToEvent", sender: nil)
+    @IBAction func cancelPickingDate(_ sender: AnyObject) {
+        self.performSegue(withIdentifier: "DatePickerToEvent", sender: nil)
     }
 
-    @IBAction func toggleDatePicker(sender: AnyObject) {
+    @IBAction func toggleDatePicker(_ sender: AnyObject) {
         if (DatePickerPageViewController.toPass == "start"){
-            if(dpDatePicker.datePickerMode == UIDatePickerMode.DateAndTime){
+            if(dpDatePicker.datePickerMode == UIDatePickerMode.dateAndTime){
                 // If the date picker currently shows both date and time, then set it to show only date and change the title of the barItemToggleDatePicker item. In this case the user selects to make a full-day event.
-                dpDatePicker.datePickerMode = UIDatePickerMode.Date
+                dpDatePicker.datePickerMode = UIDatePickerMode.date
                 barItemToggleDatePicker.title = "Specific time"
                 CreateEventPageViewController.isFullDayEvent = true
             }
             else{
                 // Otherwise, if only date is shown on the date picker, set it to show time too.
                 // The event is no longer a full-day one.
-                dpDatePicker.datePickerMode = UIDatePickerMode.DateAndTime
+                dpDatePicker.datePickerMode = UIDatePickerMode.dateAndTime
                 barItemToggleDatePicker.title = "All-Day Event"
                 CreateEventPageViewController.isFullDayEvent = false
             }
         }
     }
     
-    func getStringFromDate(date : NSDate) -> String {
-        let formatter = NSDateFormatter.init()
+    func getStringFromDate(_ date : Date) -> String {
+        let formatter = DateFormatter.init()
         
         if(!CreateEventPageViewController.isFullDayEvent){
             formatter.dateFormat = "EEE, MMM dd, yyy, HH:mm"
@@ -99,7 +99,7 @@ class DatePickerPageViewController: UIViewController {
             }
 
         }
-        return formatter.stringFromDate(date)
+        return formatter.string(from: date)
     }
     
     

@@ -29,31 +29,30 @@ class CurrentUser{
         self.profilePicture = profilePic
     }
     
-    init(Lastname : String, Firstname : String, email: String, profilePic : UIImage){
+    init(Lastname : String, Firstname : String, email: String){
         self.firstName = Firstname
         self.lastName = Lastname
         self.email = email
-        self.profilePicture = profilePic
     }
     
-    func setPhoto(photo : UIImage){
+    func setPhoto(_ photo : UIImage){
         self.profilePicture = photo
     }
     
-    func setEncodedString(encoded : String){
+    func setEncodedString(_ encoded : String){
         self.encodedString = encoded
     }
-    func setAddress(address : String){
+    func setAddress(_ address : String){
         self.Address = address
     }
-    func setCities(cities : String){
+    func setCities(_ cities : String){
         self.Cities = cities
     }
-    func setMajor( major : String){
+    func setMajor( _ major : String){
         self.major = major
     }
     
-    func setSnapchat( snapchat : String){
+    func setSnapchat( _ snapchat : String){
         self.snapchat = snapchat
     }
     

@@ -18,6 +18,6 @@ class Data {
     static var googleUser : GIDGoogleUser?
     static var accessToken = ""
     static var refreshToken = ""
-    static var expires = NSDate()
+    static var expires = Date()
     static var currentUser : CurrentUser?
 }

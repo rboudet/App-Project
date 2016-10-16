@@ -10,7 +10,7 @@ import UIKit
 
 class TextFieldCustomCell: UITableViewCell {
     
-    func configure(text: String, placeholder : String){
+    func configure(_ text: String, placeholder : String){
         CellTextField.text = text
         CellTextField.placeholder = placeholder
         

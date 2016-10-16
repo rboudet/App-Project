@@ -12,5 +12,6 @@ target 'DKE' do
     pod 'GoogleAPIClient/Calendar'
     pod 'GTMOAuth2'
     pod 'BRYXBanner', '0.5.0'
+    pod 'Firebase/Messaging'
 end
 

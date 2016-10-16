@@ -28,9 +28,11 @@
 		A765BAFC1D50D05C003785C8 /* DateService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A765BAFB1D50D05C003785C8 /* DateService.swift */; };
 		A765BAFE1D50E2A6003785C8 /* SearchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A765BAFD1D50E2A6003785C8 /* SearchPage.swift */; };
 		A77031051D528C2B009DFC3E /* ViewProfilViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77031041D528C2B009DFC3E /* ViewProfilViewController.swift */; };
+		A77212191DA3489A00A0504E /* MyCustomCell3.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77212181DA3489700A0504E /* MyCustomCell3.swift */; };
+		A772121B1DA3589A00A0504E /* EventPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A772121A1DA3589900A0504E /* EventPageViewController.swift */; };
 		A777C70C1D5C96D9006DE722 /* TextFieldCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */; };
+		A78F609F1DA5839E00A8C136 /* WelcomePageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */; };
 		A7F4491E1D60924100CFF628 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = A7F4491D1D60924100CFF628 /* GTMOAuth2ViewTouch.xib */; };
-		A7F4E8401D54BA1600E62D93 /* WelcomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F4E83F1D54BA1600E62D93 /* WelcomePageViewController.swift */; };
 		A7F8E9A71D577EEA00DA348A /* MyCustomCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F8E9A61D577EEA00DA348A /* MyCustomCell2.swift */; };
 		E77CCDF1E4EC9A2304C492C8 /* Pods_DKE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6983F1BFA45F27F6FF738EB6 /* Pods_DKE.framework */; };
 /* End PBXBuildFile section */
@@ -63,10 +65,12 @@
 		A765BAFB1D50D05C003785C8 /* DateService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateService.swift; sourceTree = "<group>"; };
 		A765BAFD1D50E2A6003785C8 /* SearchPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchPage.swift; path = ../SearchPage.swift; sourceTree = "<group>"; };
 		A77031041D528C2B009DFC3E /* ViewProfilViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ViewProfilViewController.swift; path = ../ViewProfilViewController.swift; sourceTree = "<group>"; };
+		A77212181DA3489700A0504E /* MyCustomCell3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyCustomCell3.swift; sourceTree = "<group>"; };
+		A772121A1DA3589900A0504E /* EventPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventPageViewController.swift; sourceTree = "<group>"; };
 		A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldCustomCell.swift; sourceTree = "<group>"; };
 		A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DKE-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
+		A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomePageTableViewController.swift; sourceTree = "<group>"; };
 		A7F4491D1D60924100CFF628 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2ViewTouch.xib; path = DKE/GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
-		A7F4E83F1D54BA1600E62D93 /* WelcomePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WelcomePageViewController.swift; path = ../WelcomePageViewController.swift; sourceTree = "<group>"; };
 		A7F8E9A61D577EEA00DA348A /* MyCustomCell2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyCustomCell2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -132,11 +136,12 @@
 				A765BAFD1D50E2A6003785C8 /* SearchPage.swift */,
 				A75AB2DD1D4E5A27008FBF00 /* SignUpPageViewController.swift */,
 				A77031041D528C2B009DFC3E /* ViewProfilViewController.swift */,
-				A7F4E83F1D54BA1600E62D93 /* WelcomePageViewController.swift */,
 				A705F2381D8AE82D0020B773 /* User.swift */,
 				A705F2451D8F479C0020B773 /* SWRevealViewController.m */,
 				A705F2441D8F478E0020B773 /* SWRevealViewController.h */,
 				A705F24B1D9186290020B773 /* HistoryDataViewController.swift */,
+				A772121A1DA3589900A0504E /* EventPageViewController.swift */,
+				A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */,
 			);
 			name = Pages;
 			path = DKE;
@@ -165,6 +170,7 @@
 				A743BE521D53445600C137FF /* MyCustomCell.swift */,
 				A7F8E9A61D577EEA00DA348A /* MyCustomCell2.swift */,
 				A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */,
+				A77212181DA3489700A0504E /* MyCustomCell3.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -205,6 +211,12 @@
 					A75AB2C51D4E3BD9008FBF00 = {
 						CreatedOnToolsVersion = 7.3.1;
 						DevelopmentTeam = RPZN2LXR43;
+						LastSwiftMigration = 0800;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};
@@ -301,16 +313,18 @@
 				A75AB2E21D4E8FBF008FBF00 /* HomePageViewController.swift in Sources */,
 				A705F2461D8F479C0020B773 /* SWRevealViewController.m in Sources */,
 				A75AB2DE1D4E5A27008FBF00 /* SignUpPageViewController.swift in Sources */,
+				A78F609F1DA5839E00A8C136 /* WelcomePageTableViewController.swift in Sources */,
 				A765BAF71D50CF20003785C8 /* EditProfileViewController.swift in Sources */,
 				A705F2391D8AE82D0020B773 /* User.swift in Sources */,
 				A705F2481D8F4DEF0020B773 /* BackTableViewController.swift in Sources */,
 				A75AB2CC1D4E3BDB008FBF00 /* ViewController.swift in Sources */,
 				A705F24C1D91862A0020B773 /* HistoryDataViewController.swift in Sources */,
 				A777C70C1D5C96D9006DE722 /* TextFieldCustomCell.swift in Sources */,
+				A77212191DA3489A00A0504E /* MyCustomCell3.swift in Sources */,
 				A75AB2E41D4E9699008FBF00 /* LoginPageViewController.swift in Sources */,
 				A743BE531D53445600C137FF /* MyCustomCell.swift in Sources */,
+				A772121B1DA3589A00A0504E /* EventPageViewController.swift in Sources */,
 				A765BAFC1D50D05C003785C8 /* DateService.swift in Sources */,
-				A7F4E8401D54BA1600E62D93 /* WelcomePageViewController.swift in Sources */,
 				A7F8E9A71D577EEA00DA348A /* MyCustomCell2.swift in Sources */,
 				A765BAFE1D50E2A6003785C8 /* SearchPage.swift in Sources */,
 				A75AB2CA1D4E3BDB008FBF00 /* AppDelegate.swift in Sources */,
@@ -437,6 +451,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "DKE-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
@@ -454,6 +469,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "DKE-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;

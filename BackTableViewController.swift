@@ -18,25 +18,25 @@ class BackTableViewController: UITableViewController {
     var DeployedCells = 0
     var cellChosen = ""
     override func viewDidLoad() {
-        LinkCellTableView.backgroundColor = UIColor.grayColor()
+        LinkCellTableView.backgroundColor = UIColor.gray
         LinkCellTableView.tableFooterView = UIView()
         LinkCellTableView.tableHeaderView = UIView()
         
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell : UITableViewCell?
-        if (indexPath.row == 0){
-            cell = tableView.dequeueReusableCellWithIdentifier("cell1", forIndexPath: indexPath) as UITableViewCell
+        if ((indexPath as NSIndexPath).row == 0){
+            cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath) as UITableViewCell
         }
-        else if (indexPath.row == 1){
-            cell = tableView.dequeueReusableCellWithIdentifier("cell2", forIndexPath: indexPath) as UITableViewCell
+        else if ((indexPath as NSIndexPath).row == 1){
+            cell = tableView.dequeueReusableCell(withIdentifier: "cell2", for: indexPath) as UITableViewCell
         }
-        else if (indexPath.row == 2){
-            cell = tableView.dequeueReusableCellWithIdentifier("cell3", forIndexPath: indexPath) as UITableViewCell
+        else if ((indexPath as NSIndexPath).row == 2){
+            cell = tableView.dequeueReusableCell(withIdentifier: "cell3", for: indexPath) as UITableViewCell
         }
-        else if(indexPath.row == 3){
-            cell = tableView.dequeueReusableCellWithIdentifier("cell4", forIndexPath: indexPath) as UITableViewCell
+        else if((indexPath as NSIndexPath).row == 3){
+            cell = tableView.dequeueReusableCell(withIdentifier: "cell4", for: indexPath) as UITableViewCell
             if (!isDKEHistoryListOpen){
                 cell?.textLabel!.text = "+ DKE History"
             }
@@ -46,54 +46,54 @@ class BackTableViewController: UITableViewController {
         }
         
         if( self.isDKEHistoryListOpen){
-            if (indexPath.row == 4){
-                cell = tableView.dequeueReusableCellWithIdentifier("cell5", forIndexPath: indexPath) as UITableViewCell
+            if ((indexPath as NSIndexPath).row == 4){
+                cell = tableView.dequeueReusableCell(withIdentifier: "cell5", for: indexPath) as UITableViewCell
                 cell?.textLabel?.text = "       - Founding Fathers"
             }
-            if (indexPath.row == 5){
-                cell = tableView.dequeueReusableCellWithIdentifier("cell5", forIndexPath: indexPath) as UITableViewCell
+            if ((indexPath as NSIndexPath).row == 5){
+                cell = tableView.dequeueReusableCell(withIdentifier: "cell5", for: indexPath) as UITableViewCell
                 cell?.textLabel?.text = "       - First Chapters"
                
             }
-            if (indexPath.row == 6){
-                cell = tableView.dequeueReusableCellWithIdentifier("cell5", forIndexPath: indexPath) as UITableViewCell
+            if ((indexPath as NSIndexPath).row == 6){
+                cell = tableView.dequeueReusableCell(withIdentifier: "cell5", for: indexPath) as UITableViewCell
                 cell?.textLabel?.text = "       - Objects of DKE"
             }
-            if (indexPath.row == 7){
-                cell = tableView.dequeueReusableCellWithIdentifier("cell5", forIndexPath: indexPath) as UITableViewCell
+            if ((indexPath as NSIndexPath).row == 7){
+                cell = tableView.dequeueReusableCell(withIdentifier: "cell5", for: indexPath) as UITableViewCell
                 cell?.textLabel?.text = "       - TA History"
             }
 
         }
         
-        if (indexPath.row == 4 + DeployedCells){
+        if ((indexPath as NSIndexPath).row == 4 + DeployedCells){
             // add Event
-            cell = tableView.dequeueReusableCellWithIdentifier("cell6", forIndexPath: indexPath) as UITableViewCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "cell6", for: indexPath) as UITableViewCell
             
             
         }
         
-        if( indexPath.row == 5 + DeployedCells){
+        if( (indexPath as NSIndexPath).row == 5 + DeployedCells){
             // Logout
-            cell = tableView.dequeueReusableCellWithIdentifier("cell7", forIndexPath: indexPath) as UITableViewCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "cell7", for: indexPath) as UITableViewCell
         }
-        if( indexPath.row == 6 + DeployedCells){
+        if( (indexPath as NSIndexPath).row == 6 + DeployedCells){
             // Logout
-            cell = tableView.dequeueReusableCellWithIdentifier("cell8", forIndexPath: indexPath) as UITableViewCell
+            cell = tableView.dequeueReusableCell(withIdentifier: "cell8", for: indexPath) as UITableViewCell
         }
         
         
-        cell?.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator
+        cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         
         return cell!
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return numberOfCells
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if(indexPath.row == 3){
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if((indexPath as NSIndexPath).row == 3){
             if(!isDKEHistoryListOpen){
                 self.numberOfCells = self.numberOfCells + 4
                 isDKEHistoryListOpen = true
@@ -108,18 +108,18 @@ class BackTableViewController: UITableViewController {
             }
         }
         
-        else if (indexPath.row > 3 && indexPath.row < 7 && isDKEHistoryListOpen){
-            if (indexPath.row == 4){
+        else if ((indexPath as NSIndexPath).row > 3 && (indexPath as NSIndexPath).row < 7 && isDKEHistoryListOpen){
+            if ((indexPath as NSIndexPath).row == 4){
                 HistoryDataViewController.toPass = "DKEFoundingFathers"
             }
-            if (indexPath.row == 5){
+            if ((indexPath as NSIndexPath).row == 5){
                 HistoryDataViewController.toPass = "DKEFirstChapters"
             }
             
-            if (indexPath.row == 6){
+            if ((indexPath as NSIndexPath).row == 6){
                  HistoryDataViewController.toPass = "objects"
             }
-            if (indexPath.row == 7){
+            if ((indexPath as NSIndexPath).row == 7){
                 HistoryDataViewController.toPass = "TAHistory"
             }
             
@@ -132,18 +132,17 @@ class BackTableViewController: UITableViewController {
             LinkCellTableView.reloadData()
         }
         
-        if (indexPath.row == 6 + DeployedCells){
+        if ((indexPath as NSIndexPath).row == 6 + DeployedCells){
             // the user decides to log out
-            let alert = UIAlertController(title: "Logging out", message: "Are you sure you want to sign out of your account", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: {  (action: UIAlertAction!) in
+            let alert = UIAlertController(title: "Logging out", message: "Are you sure you want to sign out of your account", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
                 GIDSignIn.sharedInstance().signOut()
                 try! FIRAuth.auth()!.signOut()
-                CreateEventPageViewController.arrGoogleCalendars = nil
-                self.performSegueWithIdentifier("HomeToLogin", sender: nil)
+                self.performSegue(withIdentifier: "HomeToLogin", sender: nil)
             }))
             
-            alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
 
         }
     }

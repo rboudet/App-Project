@@ -60,7 +60,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         if (self.revealViewController() != nil){
             
             Open.target = self.revealViewController()
-            Open.action = "revealToggle:"
+            Open.action = #selector(SWRevealViewController.revealToggle(_:))
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
@@ -68,7 +68,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         self.imagePicker.delegate = self
         InformationTableView.delegate = self
         InformationTableView.dataSource = self
-        InformationTableView.backgroundColor = UIColor.whiteColor()
+        InformationTableView.backgroundColor = UIColor.white
         InformationTableView.tableHeaderView = nil
         
        // NameLabel.hidden = true
@@ -83,6 +83,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         self.majorLabel.text = "Major : " + (Data.currentUser?.major)!
         self.AdressLabel.text = "Adress : " + (Data.currentUser?.Address)!
         self.CitiesLabel.text = "Cities lived in : " + (Data.currentUser?.Cities)!
+        self.SnapchatLabel.text = "Snapchat : " + (Data.currentUser?.snapchat)!
 
         
        /* _ = Data.ref.child("users").child(Data.userID!).observeEventType(FIRDataEventType.Value, withBlock: { (snapshot) in
@@ -110,12 +111,12 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
        
         
         ProfilePicture.layer.borderWidth = 1
-        ProfilePicture.layer.borderColor = UIColor.blackColor().CGColor
+        ProfilePicture.layer.borderColor = UIColor.black.cgColor
         ProfilePicture.layer.cornerRadius = ProfilePicture.frame.size.width/7
         ProfilePicture.clipsToBounds = true
         let width = ProfilePicture.frame.width
         let height = ProfilePicture.frame.height
-        ProfilePicture.contentMode = .ScaleToFill
+        ProfilePicture.contentMode = .scaleToFill
         let image = imageWithImage((Data.currentUser?.profilePicture)!, scaledToSize: CGSize(width: width - 30, height: height - 40))
         ProfilePicture.image = image
         
@@ -125,7 +126,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         // Do any additional setup after loading the view, typically from a nib.
     }
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if(HomePageViewController.justEditedProfil != nil && HomePageViewController.justEditedProfil!){
             let banner = Banner(title: "Profile Change Saved", subtitle: "", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:48.00/255.0, green:174.0/255.0, blue:51.5/255.0, alpha:1.000))
@@ -144,42 +145,42 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         // Dispose of any resources that can be recreated.
     }
     
-    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         view.endEditing(true)
-        super.touchesBegan(touches, withEvent: event)
+        super.touchesBegan(touches, with: event)
     }
     
     
     
 
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return (2 + self.Hobbies.count + self.Interests.count)
     }
     
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 40.0
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let CellIdentifier = "Cell"
         var cell : UITableViewCell?
-        cell = self.InformationTableView.dequeueReusableCellWithIdentifier(CellIdentifier)
+        cell = self.InformationTableView.dequeueReusableCell(withIdentifier: CellIdentifier)
         if(cell == nil){
-            cell = UITableViewCell(style: UITableViewCellStyle.Default, reuseIdentifier: CellIdentifier)
-            cell!.selectionStyle = UITableViewCellSelectionStyle.Gray
-            cell!.accessoryType = UITableViewCellAccessoryType.None
+            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: CellIdentifier)
+            cell!.selectionStyle = UITableViewCellSelectionStyle.gray
+            cell!.accessoryType = UITableViewCellAccessoryType.none
         }
         cell!.textLabel?.font = UIFont(name: "Trebuchet MS", size: 10.0)
 
         
-        if(indexPath.row == 0){
+        if((indexPath as NSIndexPath).row == 0){
             // this means it is the 'add Hobby' cell
             if(isEditingHobbies){
                 cell!.textLabel!.text = ""
-                InformationTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: true)
+                InformationTableView.scrollToRow(at: indexPath, at: .top, animated: true)
                 cell!.contentView.addSubview(hobbyTextField!)
-                cell!.accessoryType = UITableViewCellAccessoryType.None
+                cell!.accessoryType = UITableViewCellAccessoryType.none
                 
             }
             else{
@@ -188,13 +189,13 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
             }
         }
         
-        else if(indexPath.row == self.indexInterest){
+        else if((indexPath as NSIndexPath).row == self.indexInterest){
             // this means it is the 'add Interest' cell
             if(isEditingInterests){
-                InformationTableView.scrollToRowAtIndexPath(indexPath, atScrollPosition: .Top, animated: true)
+                InformationTableView.scrollToRow(at: indexPath, at: .top, animated: true)
                 cell!.textLabel!.text = ""
                 cell!.contentView.addSubview(interestTextField!)
-                cell!.accessoryType = UITableViewCellAccessoryType.None
+                cell!.accessoryType = UITableViewCellAccessoryType.none
             }
             else{
                 cell!.textLabel?.font = UIFont(name: "Trebuchet MS-bold", size: 10.0)
@@ -202,21 +203,21 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
             }
         }
         
-        else if(indexPath.row < self.indexInterest){
-            if( indexPath.row <= self.hobbiesShown){
+        else if((indexPath as NSIndexPath).row < self.indexInterest){
+            if( (indexPath as NSIndexPath).row <= self.hobbiesShown){
             // this categorie of cells are the hobbies that the user has already put in
-                cell!.textLabel?.text = self.Hobbies[self.Hobbies.count - indexPath.row]
+                cell!.textLabel?.text = self.Hobbies[self.Hobbies.count - (indexPath as NSIndexPath).row]
             }
-            else if (indexPath.row == self.hobbiesShown + 1){
+            else if ((indexPath as NSIndexPath).row == self.hobbiesShown + 1){
                 cell!.textLabel?.text = "Tap to see more"
             }
         }
         else{
             // these will be the interests of the user
-            if (indexPath.row <= indexInterest + interestsShown){
-                cell!.textLabel?.text = self.Interests[self.Interests.count - (indexPath.row - self.indexInterest)]
+            if ((indexPath as NSIndexPath).row <= indexInterest + interestsShown){
+                cell!.textLabel?.text = self.Interests[self.Interests.count - ((indexPath as NSIndexPath).row - self.indexInterest)]
             }
-            else if( indexPath.row == indexInterest + interestsShown + 1){
+            else if( (indexPath as NSIndexPath).row == indexInterest + interestsShown + 1){
                 cell!.textLabel?.text = "Tap to see more"
             }
             
@@ -225,11 +226,11 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         return cell!
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let cell = InformationTableView.cellForRowAtIndexPath(indexPath)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = InformationTableView.cellForRow(at: indexPath)
         cell?.setSelected(false, animated: false)
         
-        if(indexPath.row == 0){
+        if((indexPath as NSIndexPath).row == 0){
             // the user has clicked on add new hobby, we want a textField to appear, let him input his hobby, and then save, and reload the tableView
             if(!isEditingHobbies){
                 hobbyTextField = nil
@@ -248,7 +249,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
             InformationTableView.reloadData()
             hobbyTextField?.becomeFirstResponder()
         }
-        else if(indexPath.row == indexInterest){
+        else if((indexPath as NSIndexPath).row == indexInterest){
             // the user has clicked on add new hobby, we want a textField to appear, let him input his hobby, and then save, and reload the tableView
             if(!isEditingInterests){
                 interestTextField = nil
@@ -267,28 +268,28 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
             InformationTableView.reloadData()
             interestTextField?.becomeFirstResponder()
         }
-        else if( indexPath.row == hobbiesShown + 1){
+        else if( (indexPath as NSIndexPath).row == hobbiesShown + 1){
             hobbiesShown = hobbiesShown + 3
             InformationTableView.reloadData()
         }
-        else if( indexPath.row == indexInterest + interestsShown + 1){
+        else if( (indexPath as NSIndexPath).row == indexInterest + interestsShown + 1){
             interestsShown = interestsShown + 3
             InformationTableView.reloadData()
         }
             
-        else if (indexPath.row < indexInterest) {
+        else if ((indexPath as NSIndexPath).row < indexInterest) {
             cancelTextField()
             hobbiesShown = 3
             interestsShown = 3
             // the user as clicked on a hobby, an alert shows up asking if he wants to delete this hobby or not
-            let alert = UIAlertController(title: "Deleting", message: "Are you sure you want to delete this Hobby?", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: {  (action: UIAlertAction!) in
-                self.Hobbies.removeAtIndex(self.Hobbies.count - indexPath.row)
+            let alert = UIAlertController(title: "Deleting", message: "Are you sure you want to delete this Hobby?", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
+                self.Hobbies.remove(at: self.Hobbies.count - (indexPath as NSIndexPath).row)
                 self.indexInterest = self.indexInterest - 1
                 self.InformationTableView.reloadData()
             }))
-            alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
             
 
         }
@@ -297,14 +298,14 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
             cancelTextField()
             hobbiesShown = 3
             interestsShown = 3
-            let alert = UIAlertController(title: "Deleting", message: "Are you sure you want to delete this Interest?", preferredStyle: UIAlertControllerStyle.Alert)
-            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.Default, handler: {  (action: UIAlertAction!) in
-                self.Interests.removeAtIndex(self.Interests.count - (indexPath.row - self.indexInterest))
+            let alert = UIAlertController(title: "Deleting", message: "Are you sure you want to delete this Interest?", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
+                self.Interests.remove(at: self.Interests.count - ((indexPath as NSIndexPath).row - self.indexInterest))
                 self.InformationTableView.reloadData()
             }))
             
-            alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.Default, handler: nil))
-            self.presentViewController(alert, animated: true, completion: nil)
+            alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
 
         }
         
@@ -314,7 +315,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
     }
     
     
-    @IBAction func CancelButtonTapped(sender: AnyObject) {
+    @IBAction func CancelButtonTapped(_ sender: AnyObject) {
         cancelTextField()
     }
     
@@ -337,7 +338,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
     }
     
     
-    @IBAction func SaveButtonTapped(sender: AnyObject) {
+    @IBAction func SaveButtonTapped(_ sender: AnyObject) {
         activityIndicator()
         indicator.startAnimating()
         var newElement = ""
@@ -368,34 +369,34 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
     }
     
     func activityIndicator() {
-        indicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 40, 40))
-        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
         indicator.center = self.view.center
         indicator.hidesWhenStopped = true
         self.view.addSubview(indicator)
     }
     
-    func setUpHobbyTextField(indexPath : NSIndexPath){
+    func setUpHobbyTextField(_ indexPath : IndexPath){
         
-        let cell = InformationTableView.cellForRowAtIndexPath(indexPath)
+        let cell = InformationTableView.cellForRow(at: indexPath)
         let optionalRightMargin: CGFloat = 10.0
         let optionalBottomMargin: CGFloat = 10.0
-        hobbyTextField = UITextField(frame: CGRectMake(5, 5, cell!.contentView.frame.size.width - 5 - optionalRightMargin, cell!.contentView.frame.size.height - 5 - optionalBottomMargin))
-        hobbyTextField!.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        hobbyTextField?.borderStyle = UITextBorderStyle.RoundedRect
+        hobbyTextField = UITextField(frame: CGRect(x: 5, y: 5, width: cell!.contentView.frame.size.width - 5 - optionalRightMargin, height: cell!.contentView.frame.size.height - 5 - optionalBottomMargin))
+        hobbyTextField!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        hobbyTextField?.borderStyle = UITextBorderStyle.roundedRect
         hobbyTextField?.inputAccessoryView = ToolBarElement
         hobbyTextField?.delegate = self
         hobbyTextField?.placeholder = "enter your new hobby"
     }
     
-    func setUpInterestTextField(indexPath : NSIndexPath){
+    func setUpInterestTextField(_ indexPath : IndexPath){
         
-        let cell = InformationTableView.cellForRowAtIndexPath(indexPath)
+        let cell = InformationTableView.cellForRow(at: indexPath)
         let optionalRightMargin: CGFloat = 10.0
         let optionalBottomMargin: CGFloat = 10.0
-        interestTextField = UITextField(frame: CGRectMake(5, 5, cell!.contentView.frame.size.width - 5 - optionalRightMargin, cell!.contentView.frame.size.height - 5 - optionalBottomMargin))
-        interestTextField!.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        interestTextField?.borderStyle = UITextBorderStyle.RoundedRect
+        interestTextField = UITextField(frame: CGRect(x: 5, y: 5, width: cell!.contentView.frame.size.width - 5 - optionalRightMargin, height: cell!.contentView.frame.size.height - 5 - optionalBottomMargin))
+        interestTextField!.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        interestTextField?.borderStyle = UITextBorderStyle.roundedRect
         interestTextField?.inputAccessoryView = ToolBarElement
         interestTextField?.delegate = self
         interestTextField?.placeholder = "enter your new interest"
@@ -404,50 +405,50 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
     }
     
     
-    @IBAction func EditProfilePictureTapped(sender: AnyObject) {
+    @IBAction func EditProfilePictureTapped(_ sender: AnyObject) {
         imagePicker.allowsEditing = true
-        imagePicker.sourceType = .PhotoLibrary
+        imagePicker.sourceType = .photoLibrary
         
-        presentViewController(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
         
     }
     
     
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         if let pickerImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
-            ProfilePicture.contentMode = .ScaleAspectFill
+            ProfilePicture.contentMode = .scaleAspectFill
             let newImage = imageWithImage(pickerImage, scaledToSize: CGSize(width: ProfilePicture.frame.width, height: ProfilePicture.frame.height))
             ProfilePicture.image = newImage
             Data.currentUser?.setPhoto(newImage)
             let imageData = UIImagePNGRepresentation(newImage)!
-            let encodedString = imageData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+            let encodedString = imageData.base64EncodedString(options: .lineLength64Characters)
             Data.ref.child("users").child(Data.userID!).updateChildValues(["ProfilePicture" : encodedString])
             Data.currentUser?.setEncodedString(encodedString)
             
             
         }
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
-    func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        dismissViewControllerAnimated(true, completion: nil)
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        dismiss(animated: true, completion: nil)
     }
     
     
     // this function is to resize the images taken from the photo library
-    func imageWithImage(image:UIImage, scaledToSize newSize:CGSize ) -> UIImage {
+    func imageWithImage(_ image:UIImage, scaledToSize newSize:CGSize ) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
-        image.drawInRect(CGRectMake(0, 0, newSize.width, newSize.height))
-        let newImage : UIImage  = UIGraphicsGetImageFromCurrentImageContext()
+        image.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
+        let newImage : UIImage  = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext();
         return newImage;
     }
     
     
-    @IBAction func EditProfileTapped(sender: AnyObject) {
-        self.performSegueWithIdentifier("EditProfil", sender: nil)
+    @IBAction func EditProfileTapped(_ sender: AnyObject) {
+        self.performSegue(withIdentifier: "EditProfil", sender: nil)
     }
     
     
