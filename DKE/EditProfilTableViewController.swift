@@ -339,7 +339,6 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
         var newCities : String?
         var newSnapchat : String?
         var newData : String?
-        var ischair : Bool?
         for i in 1...6{
             index = NSIndexPath(row: i, section: 0)
             cell = EditProfileTableView.cellForRow(at: index! as IndexPath) as! MyCustomCell3?

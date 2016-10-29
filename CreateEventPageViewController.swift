@@ -18,14 +18,9 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     @IBOutlet var toolbarInputAccessoryView: UIToolbar!
     @IBOutlet weak var barItemPost: UIBarButtonItem!
     
-    
-    fileprivate let kKeychainItemName = "Google Calendar API"
-    fileprivate let kClientID = "464162409429-k3kb5k3ldic0knqbt5ad8h3olfd67va6.apps.googleusercontent.com"
-    
     var accessToken = ""
-    fileprivate let scopes = [kGTLAuthScopeCalendar, "https://www.googleapis.com/auth/userinfo.profile"]
+  
     
-    let service = GTLServiceCalendar()
 
     var indicator = UIActivityIndicatorView()
 
@@ -453,12 +448,6 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
         self.view.addSubview(indicator)
     }
     
-    func displayAddEventResultWithTicker(_ ticket : GTLServiceTicket){
-       let error = ticket.fetchError
-        if(error != nil){
-            print(error?.localizedDescription)
-        }
-    }
     
     
     

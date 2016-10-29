@@ -91,7 +91,6 @@ class BackTableViewController: UITableViewController {
         if (isCommitteesDeployed){
             if ((5 + DeployedCells < indexPath.row) && (indexPath.row < 6 + DeployedCells + committees.count)){
                 cell = tableView.dequeueReusableCell(withIdentifier: "cell7bis", for: indexPath) as UITableViewCell
-                print(indexPath.row - 6 - DeployedCells)
                 
                 if (committees[indexPath.row - 6 - DeployedCells] == Data.currentUser?.committee){
                     cell?.textLabel?.text = "       - " + committees[indexPath.row - 6 - DeployedCells] + " *"
@@ -128,7 +127,7 @@ class BackTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if ((indexPath as NSIndexPath).row == 6 + DeployedCells){
+        if ((indexPath as NSIndexPath).row == 6 + DeployedCells + DeployedCommitteeCells){
             // the user decides to log out
             let alert = UIAlertController(title: "Logging out", message: "Are you sure you want to sign out of your account", preferredStyle: UIAlertControllerStyle.alert)
             
@@ -164,7 +163,9 @@ class BackTableViewController: UITableViewController {
                 }
             }
         
-            else if ((indexPath as NSIndexPath).row > 3 && (indexPath as NSIndexPath).row < 7 && isDKEHistoryListOpen){
+            else if (indexPath.row > 3 && indexPath.row < 7 && isDKEHistoryListOpen){
+                
+                // these are the history cells
                 if ((indexPath as NSIndexPath).row == 4){
                     HistoryDataViewController.toPass = "DKEFoundingFathers"
                 }
@@ -182,8 +183,6 @@ class BackTableViewController: UITableViewController {
             
             else if (isCommitteesDeployed && indexPath.row > 5 && indexPath.row < 14){
                 CommitteeViewController.toPass = self.committees[indexPath.row - 6]
-                isCommitteesDeployed = false
-                self.DeployedCommitteeCells = 0
             }
             
             else if (indexPath.row == 5 + DeployedCells){
