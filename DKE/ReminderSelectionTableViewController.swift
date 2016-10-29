@@ -10,12 +10,16 @@ import UIKit
 
 class ReminderSelectionTableViewController: UITableViewController {
 
+    @IBOutlet var ReminderTableView: UITableView!
     var reminderArray : [String]?
     var compareWith = " "
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        ReminderTableView.delegate = self
+        ReminderTableView.dataSource = self
+        ReminderTableView.reloadData()
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -37,6 +41,7 @@ class ReminderSelectionTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
+        print(reminderArray?.count)
         return (reminderArray?.count)!
     }
 
