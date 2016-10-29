@@ -11,7 +11,7 @@ import Firebase
 import BRYXBanner
 
 
-class HomePageViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
+class HomePageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
     
   
     @IBOutlet weak var Open: UIBarButtonItem!
@@ -34,7 +34,6 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
     
     var hobbyTextField : UITextField?
     var interestTextField : UITextField?
-    let imagePicker = UIImagePickerController()
 
     var indicator = UIActivityIndicatorView()
     
@@ -65,63 +64,33 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         }
         
         
-        self.imagePicker.delegate = self
         InformationTableView.delegate = self
         InformationTableView.dataSource = self
         InformationTableView.backgroundColor = UIColor.white
         InformationTableView.tableHeaderView = nil
         
-       // NameLabel.hidden = true
-       // EmailLabel.hidden = true
-       // AdressLabel.hidden = true
-       // CitiesLabel.hidden = true
-       // SnapchatLabel.hidden = true
-        
-        
-        self.EmailLabel.text = "Email : " + (Data.currentUser?.email)!
-        self.NameLabel.text = "Name : " + (Data.currentUser?.firstName)! + " " + Data.currentUser!.lastName!
-        self.majorLabel.text = "Major : " + (Data.currentUser?.major)!
-        self.AdressLabel.text = "Adress : " + (Data.currentUser?.Address)!
-        self.CitiesLabel.text = "Cities lived in : " + (Data.currentUser?.Cities)!
-        self.SnapchatLabel.text = "Snapchat : " + (Data.currentUser?.snapchat)!
-
-        
-       /* _ = Data.ref.child("users").child(Data.userID!).observeEventType(FIRDataEventType.Value, withBlock: { (snapshot) in
-            // we display the info that the user has already put on his profil
-            let data = snapshot.value as! [String : AnyObject]
-            
-            if(data["Hobbies"] != nil){
-                self.Hobbies = data["Hobbies"] as! [String]
-            }
-            
-            if(data["Interests"] != nil){
-                self.Interests = data["Interests"] as! [String]
-            }
-            
-            if(data["indexInterest"] != nil){
-                self.indexInterest = data["indexInterest"] as! Int
-            }
-            
-            self.InformationTableView.reloadData()
-        }) */
-        
-        
-        //NameLabel.hidden = false
-       // EmailLabel.hidden = false
+        do{
+            self.EmailLabel.text = "Email : " + (Data.currentUser?.email)!
+            self.NameLabel.text = "Name : " + (Data.currentUser?.firstName)! + " " + Data.currentUser!.lastName!
+            self.majorLabel.text = "Major : " + (Data.currentUser?.major)!
+            self.AdressLabel.text = "Adress : " + (Data.currentUser?.Address)!
+            self.CitiesLabel.text = "Cities lived in : " + (Data.currentUser?.Cities)!
+            self.SnapchatLabel.text = "Snapchat : " + (Data.currentUser?.snapchat)!
        
         
-        ProfilePicture.layer.borderWidth = 1
-        ProfilePicture.layer.borderColor = UIColor.black.cgColor
-        ProfilePicture.layer.cornerRadius = ProfilePicture.frame.size.width/7
-        ProfilePicture.clipsToBounds = true
-        let width = ProfilePicture.frame.width
-        let height = ProfilePicture.frame.height
-        ProfilePicture.contentMode = .scaleToFill
-        let image = imageWithImage((Data.currentUser?.profilePicture)!, scaledToSize: CGSize(width: width - 30, height: height - 40))
-        ProfilePicture.image = image
-        
-        
-        
+            ProfilePicture.layer.borderWidth = 1
+            ProfilePicture.layer.borderColor = UIColor.black.cgColor
+            ProfilePicture.layer.cornerRadius = ProfilePicture.frame.size.width/2
+            ProfilePicture.clipsToBounds = true
+            let width = ProfilePicture.frame.width
+            let height = ProfilePicture.frame.height
+            ProfilePicture.contentMode = .scaleToFill
+            let image = imageWithImage((Data.currentUser?.profilePicture)!, scaledToSize: CGSize(width: width - 30, height: height - 40))
+            ProfilePicture.image = image
+        }
+        catch{
+         print("No intern")
+        }
         
         // Do any additional setup after loading the view, typically from a nib.
     }
@@ -400,42 +369,7 @@ class HomePageViewController: UIViewController, UIImagePickerControllerDelegate,
         interestTextField?.inputAccessoryView = ToolBarElement
         interestTextField?.delegate = self
         interestTextField?.placeholder = "enter your new interest"
-        
-        
     }
-    
-    
-    @IBAction func EditProfilePictureTapped(_ sender: AnyObject) {
-        imagePicker.allowsEditing = true
-        imagePicker.sourceType = .photoLibrary
-        
-        present(imagePicker, animated: true, completion: nil)
-        
-    }
-    
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let pickerImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            
-            ProfilePicture.contentMode = .scaleAspectFill
-            let newImage = imageWithImage(pickerImage, scaledToSize: CGSize(width: ProfilePicture.frame.width, height: ProfilePicture.frame.height))
-            ProfilePicture.image = newImage
-            Data.currentUser?.setPhoto(newImage)
-            let imageData = UIImagePNGRepresentation(newImage)!
-            let encodedString = imageData.base64EncodedString(options: .lineLength64Characters)
-            Data.ref.child("users").child(Data.userID!).updateChildValues(["ProfilePicture" : encodedString])
-            Data.currentUser?.setEncodedString(encodedString)
-            
-            
-        }
-        
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        dismiss(animated: true, completion: nil)
-    }
-    
     
     // this function is to resize the images taken from the photo library
     func imageWithImage(_ image:UIImage, scaledToSize newSize:CGSize ) -> UIImage {

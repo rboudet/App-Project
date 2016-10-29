@@ -9,10 +9,6 @@
 import UIKit
 import Firebase
 import GoogleSignIn
-import GoogleAPIClient
-import FirebaseMessaging
-
-
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
@@ -33,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
         GIDSignIn.sharedInstance().delegate = self
-        //GIDSignIn.sharedInstance().signInSilently()
+        GIDSignIn.sharedInstance().signInSilently()
         GIDSignIn.sharedInstance().scopes.append("https://www.googleapis.com/auth/userinfo.profile")
         FIRDatabase.database().persistenceEnabled = true
 
@@ -134,6 +130,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 }
                 if(data["address"] != nil){
                     Data.currentUser?.setAddress(data["address"] as! String)
+                }
+                if(data["snapchat"] != nil){
+                    Data.currentUser?.setSnapchat(data["snapchat"] as! String)
+                }
+                if(data["Committee"] != nil){
+                    Data.currentUser?.setCommittee(data["Committee"] as! String)
+                }
+                if(data["CommitteeProject"] != nil){
+                    Data.currentUser?.setCurrentProject(data["CommitteeProject"] as! String)
+                }
+                if(data["Active"] != nil){
+                    Data.currentUser?.setActive(data["Active"] as! Bool)
+                }
+                if(data["Chair"] != nil){
+                    Data.currentUser?.setChair(data["Chair"] as! Bool)
                 }
             })
             

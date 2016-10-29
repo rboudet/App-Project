@@ -9,9 +9,6 @@ target 'DKE' do
     pod 'Firebase/Database'
     pod 'Firebase/Core'
     pod 'Google/SignIn'
-    pod 'GoogleAPIClient/Calendar'
-    pod 'GTMOAuth2'
     pod 'BRYXBanner', '0.5.0'
-    pod 'Firebase/Messaging'
 end
 

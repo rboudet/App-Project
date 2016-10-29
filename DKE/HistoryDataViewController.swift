@@ -26,7 +26,6 @@ class HistoryDataViewController: UIViewController {
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
 
-        print(HistoryDataViewController.toPass)
         if (HistoryDataViewController.toPass == "objects"){
             textToShow = "The Objects of Delta Kappa Epsilon are : \n\nThe cultivation of general literature and social culture,\n\nThe advancement and encouragement of intellectual excellence,\n\nThe promotion of honorable friendship and useful citizenship,\n\nThe development of a spirit of tolerance and respect for the rights and views of others,\n\nThe maintenance of gentlemantly dignity, self-respect, and morality in all circumstances and,\n\nThe union of stout hearts and kindred interests, to secure to merit its due reward."
             

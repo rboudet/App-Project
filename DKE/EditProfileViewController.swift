@@ -78,9 +78,11 @@ class EditProfileViewController: UIViewController {
         let Address = AdressTextField.text
         let cities = CitiesTextField.text
         var snapchat = SnapchatTextField.text
+        
         if (snapchat == nil){
             snapchat = "Not Provided"
         }
+        
         if(newMajor != "" && newMajor != "Not provided" && cities != "" && Address != ""){
             if(!self.isGoogleAccount){
                 Data.user?.updateEmail(newEmail!) { error in
@@ -98,6 +100,7 @@ class EditProfileViewController: UIViewController {
                     }
                 }
             }
+                
             else{
                 Data.ref.child("users").child(Data.userID!).updateChildValues(["major" : newMajor!, "profileCompleted" : "true", "address" : Address!, "cities" : cities!, "snapchat" : snapchat!])
                 

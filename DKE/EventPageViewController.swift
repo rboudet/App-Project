@@ -42,13 +42,15 @@ class EventPageViewController: UIViewController {
                     users = (data["Attending"] as! [String])
                     for i in 0...users.count-1 {
                         Data.ref.child("users").child(users[i]).observe(FIRDataEventType.value, with: { (snapshot) in
-                            let data2 = snapshot.value as! [String : AnyObject]
-                            let firstName = data2["firstName"] as! String
-                            let lastName = data2["lastName"] as! String
-                            attending += " - " + firstName + " "  + lastName + "\r"
-                            if (i == users.count-1){
-                                self.UsersAttendingLabel.text = "users attending : " + attending
+                            if (snapshot.value != nil){
+                                let data2 = snapshot.value as! [String : AnyObject]
+                                let firstName = data2["firstName"] as! String
+                                let lastName = data2["lastName"] as! String
+                                attending += " - " + firstName + " "  + lastName + "\r"
+                                if (i == users.count-1){
+                                    self.UsersAttendingLabel.text = "users attending : " + attending
                                 
+                                }
                             }
                         })
                     }

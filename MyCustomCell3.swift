@@ -10,7 +10,10 @@ import UIKit
 
 class MyCustomCell3: UITableViewCell {
 
-    @IBOutlet weak var ReminderLabel: NSLayoutConstraint!
-
-    @IBOutlet weak var ReminderSwitch: UISwitch!
+    @IBOutlet weak var iconImage: UIImageView!
+    @IBOutlet weak var InputTextField: UITextField!
+    
+    @IBOutlet weak var Label: UILabel!
+    @IBOutlet weak var CommitteeLabel: UILabel!
+    
 }

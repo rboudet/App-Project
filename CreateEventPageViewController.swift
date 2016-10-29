@@ -8,7 +8,6 @@
 
 import UIKit
 import GoogleSignIn
-import GoogleAPIClient
 import Firebase
 
 class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GIDSignInUIDelegate {
@@ -56,18 +55,6 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     static var txtEvent : UITextField?
     static var txtLocation : UITextField?
     
-    // This array is one of the most important properties, as it contains
-    // all the calendars as NSDictionary objects.
-    static var arrGoogleCalendars : NSMutableArray?
-    
-    // This dictionary contains the currently selected calendar.
-    // It's the one that appears on the table view when the calendar list
-    // is collapsed.
-    static var dictCurrentCalendar : NSDictionary?
-    
-    // A GoogleOAuth object that handles everything regarding the Google.
-    static var googleOAuth : GIDGoogleUser?
-    
     // This flag indicates whether the event description is being edited or not.
     static var isEditingEvent = false
     static var isEditingLoc = false
@@ -84,7 +71,12 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     var currentEdit = ""
     
     let reminderArray = ["1 hour before the event", "3 hours before the event", "24 hours before the event", "No reminders"]
-    var currentReminder : String?
+    static var currentReminder : String?
+    static var whoToRemind : String?
+    let whoToRemindArray = ["Finance Committee", "Betterment Committee", "Internal Committee", "External Committee", "Philanthropy Committee", "Social Committee", "House Committee", "Rush Committee", "Custom (choose by name who to remind"]
+    
+    var toPass  : String?
+    
     
     
     override func viewDidLoad() {
@@ -103,10 +95,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
         CreateEventPageViewController.isEditingEvent = false
         CreateEventPageViewController.isEditingLoc = false
         CreateEventPageViewController.isReminderListExpanded = false
-        if(CreateEventPageViewController.arrGoogleCalendars != nil && CreateEventPageViewController.dictCurrentCalendar == nil){
-            CreateEventPageViewController.dictCurrentCalendar = CreateEventPageViewController.arrGoogleCalendars![0] as? NSDictionary
-        }
-        // Do any additional setup after loading the view.
+        
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -125,7 +114,8 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
         return true
     }
     
-
+    
+    // these are the methods for when the user clicks on the buttons associated to the keyboard
     
     @IBAction func acceptEditingEvent(_ sender: AnyObject) {
         if(self.currentEdit == "event"){
@@ -180,21 +170,20 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     
     // all the table View delegate methods
     
-    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 5
+        return 4
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(section != 4){
+        if(section != 3){
             return 1
         }
         else{
             if(!CreateEventPageViewController.isReminderListExpanded){
-                return 1
+                return 2
             }
             else{
-                return reminderArray.count
+                return reminderArray.count + 1
             }
         }
     }
@@ -210,10 +199,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             footerTitle = "Location"
         }
         else if(section == 2){
-            footerTitle = "Start date"
-        }
-        else if(section == 3){
-            footerTitle = "End date"
+            footerTitle = "Enter Dates"
         }
         else {
             footerTitle = "Reminder"
@@ -227,17 +213,21 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     
     // this method will return the content of the cell that we are currently filling out
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let CellIdentifier = "Cell"
         var cell : UITableViewCell?
         let section = (indexPath as NSIndexPath).section
-        cell = self.tblPostData.dequeueReusableCell(withIdentifier: CellIdentifier)
-        if(cell == nil){
-            
-            cell = UITableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: CellIdentifier)
-            cell!.selectionStyle = UITableViewCellSelectionStyle.gray
-            cell!.accessoryType = UITableViewCellAccessoryType.none
-            cell!.textLabel?.font = UIFont(name: "Trebuchet MS", size: 15.0)
+        if (section == 3){
+            cell = self.tblPostData.dequeueReusableCell(withIdentifier: "ReminderCell")
         }
+        else {
+            cell = self.tblPostData.dequeueReusableCell(withIdentifier: "EventCell")
+        }
+       
+        cell!.selectionStyle = UITableViewCellSelectionStyle.gray
+        cell!.accessoryType = UITableViewCellAccessoryType.none
+        cell!.textLabel?.font = UIFont(name: "Trebuchet MS", size: 11.0)
+        
+        
+       
         
         if(section == 0 ){
             if(!CreateEventPageViewController.isEditingEvent){
@@ -276,67 +266,64 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
         }
         
         if(section == 2){
-            if(CreateEventPageViewController.startStrEventDate == nil || CreateEventPageViewController.startStrEventDate == ""){
-                cell?.textLabel!.text = "Pick a Date ..."
-            }
-            else{
-                cell?.textLabel!.text = CreateEventPageViewController.startStrEventDate
-                cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-            }
-        }
-        
-        if(section == 3){
-            if(CreateEventPageViewController.endStrEventDate == nil || CreateEventPageViewController.endStrEventDate == ""){
-                cell?.textLabel!.text = "Pick a Date ..."
-            }
-            else{
-                cell?.textLabel!.text = CreateEventPageViewController.endStrEventDate
-                cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
-            }
-        }
-        
-        if(section == 4){
-            
-            if(!CreateEventPageViewController.isReminderListExpanded){
-                // If the calendar list is not expanded and only the selected calendar is shown,
-                // then if the arrGoogleCalendars array is nil or it doesn't have any contents at all prompt
-                // the user to download them now.
-                // Otherwise show the summary (title) of the selected calendar along with a disclosure indicator.
+            if(indexPath.row == 0){
                 
-                if(currentReminder == nil){
+                if(CreateEventPageViewController.startStrEventDate == nil || CreateEventPageViewController.startStrEventDate == ""){
+                    cell?.textLabel!.text = "Pick a start date ..."
+                }
+                else{
+                    cell?.textLabel!.text = CreateEventPageViewController.startStrEventDate
+                    cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                }
+            }
+        
+    
+            if(indexPath.row == 1){
+                if(CreateEventPageViewController.endStrEventDate == nil || CreateEventPageViewController.endStrEventDate == ""){
+                    cell?.textLabel!.text = "Pick a end date ..."
+                }
+                else{
+                    cell?.textLabel!.text = CreateEventPageViewController.endStrEventDate
+                    cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
+                }
+            }
+        }
+        if(section == 3){
+            if (indexPath.row == 0){
+                if(CreateEventPageViewController.currentReminder == nil){
                     cell?.textLabel!.text = "Choose a form of reminder"
                 }
                 else{
-                    cell?.textLabel!.text = currentReminder
+                    cell?.textLabel!.text = CreateEventPageViewController.currentReminder
                 }
-                cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
             }
-            else{
-                cell?.textLabel!.text = reminderArray[(indexPath as NSIndexPath).row]
-                if (currentReminder != nil){
-                    if(reminderArray[(indexPath as NSIndexPath).row] == currentReminder!){
-                        cell?.accessoryType = UITableViewCellAccessoryType.checkmark
-                    }
-                    else {
-                        cell?.accessoryType = UITableViewCellAccessoryType.none
-                    }
+            else if (indexPath.row == 1){
+                if( CreateEventPageViewController.whoToRemind == nil){
+                    cell?.textLabel!.text = "Choose who to remind"
                 }
-                else {
-                    cell?.accessoryType = UITableViewCellAccessoryType.none
-
+                else{
+                    cell?.textLabel!.text = CreateEventPageViewController.whoToRemind!
                 }
-
-                
             }
-            
+            cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         }
-        
         return cell!
 
     }
     
-    
-    
+    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
+        let section = indexPath.section
+        if (section == 3){
+            if (indexPath.row == 0){
+                self.toPass = "How"
+            }
+            else {
+                self.toPass = "Who"
+            }
+        }
+        return indexPath
+        
+    }
     
     // this method is called when the user taps on one of the cells
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -375,11 +362,12 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             else{
                 return
             }
-            
+
             CreateEventPageViewController.isEditingEvent = !CreateEventPageViewController.isEditingEvent
             //tblPostData.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-            tblPostData.reloadData()
+            //tblPostData.reloadData()
             if(CreateEventPageViewController.isEditingEvent){
+                cell!.contentView.addSubview(CreateEventPageViewController.txtEvent!)
                 CreateEventPageViewController.txtEvent?.becomeFirstResponder()
             }
         }
@@ -395,27 +383,30 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             }
             CreateEventPageViewController.isEditingLoc = !CreateEventPageViewController.isEditingLoc
             //tblPostData.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-            tblPostData.reloadData()
+            
 
             if(CreateEventPageViewController.isEditingLoc){
+                cell!.contentView.addSubview(CreateEventPageViewController.txtLocation!)
                 CreateEventPageViewController.txtLocation?.becomeFirstResponder()
             }
             
         }
         
-        if(section == 2){
-            self.currentDatePicker = "start"
-            self.performSegue(withIdentifier: "EventToDatePicker", sender: nil)
-        }
-        if(section == 3){
-            if (CreateEventPageViewController.startDtEvent != nil){
-                self.currentDatePicker = "end"
+        if(section == 2 ){
+            if (indexPath.row == 0){
+                self.currentDatePicker = "start"
                 self.performSegue(withIdentifier: "EventToDatePicker", sender: nil)
+            }
+            else {
+                if (CreateEventPageViewController.startDtEvent != nil){
+                    self.currentDatePicker = "end"
+                    self.performSegue(withIdentifier: "EventToDatePicker", sender: nil)
+                }
             }
         }
         
-        if(section == 4){
-            if(CreateEventPageViewController.isReminderListExpanded){
+        if(section == 3){
+           /* if(CreateEventPageViewController.isReminderListExpanded){
                 currentReminder = reminderArray[(indexPath as NSIndexPath).row]
             }
         
@@ -423,7 +414,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
                 
                 
             let indexSet = IndexSet(integer: 4)
-            tblPostData.reloadSections(indexSet, with: UITableViewRowAnimation.automatic)
+            tblPostData.reloadSections(indexSet, with: UITableViewRowAnimation.automatic)*/
         }
         
     }
@@ -496,8 +487,11 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             self.present(alert, animated: true, completion: nil)
             return
         }
-        else if ( currentReminder == nil){
-            currentReminder = "No reminder"
+        else if (CreateEventPageViewController.currentReminder == nil){
+            let alert = UIAlertController(title: "", message: "You have not specified the reminder format", preferredStyle: UIAlertControllerStyle.alert)
+            alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+            return
         }
             
             
@@ -522,7 +516,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             let eventTitle = CreateEventPageViewController.strEvent!
             let location = CreateEventPageViewController.strLocation!
             let name =  (Data.currentUser?.firstName)! + " " + (Data.currentUser?.lastName)!
-            Data.ref.child("Events").child(eventTitle).updateChildValues(["eventTitle" :eventTitle, "startDate" : startDateString, "endDate": endDateString, "location" : location, "Creator" : name, "Reminder" : self.currentReminder!])
+            Data.ref.child("Events").child(eventTitle).updateChildValues(["eventTitle" :eventTitle, "startDate" : startDateString, "endDate": endDateString, "location" : location, "Creator" : name, "Reminder" : CreateEventPageViewController.currentReminder!])
             
             
             Data.ref.child("users").child(Data.userID!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) -> Void in
@@ -539,12 +533,6 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             })
             
             finishedPost()
-            
-            
-
-
-            
-            
             
 //            var startDateString = ""
 //            var endDateString = ""
@@ -622,9 +610,6 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
 //            
             
         }
-        
-        
-        
     }
 
     func finishedPost(){
@@ -646,9 +631,25 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
         if (segue.identifier == "BackToWelcomePage"){
             WelcomePageTableViewController.eventJustCreated = true
         }
+        
+        if (segue.identifier == "ReminderSegue"){
+            let svc = segue.destination as! ReminderSelectionTableViewController
+            if( self.toPass == "Who"){
+                if ( CreateEventPageViewController.whoToRemind != nil){
+                    svc.compareWith = CreateEventPageViewController.whoToRemind!
+                }
+    
+                svc.reminderArray = self.whoToRemindArray
+            }
+            else {
+                if ( CreateEventPageViewController.currentReminder != nil){
+                    svc.compareWith = CreateEventPageViewController.currentReminder!
+                }
+                svc.reminderArray = self.reminderArray
+            }
+
+        }
+        
     }
-    
-    
-   
 
 }

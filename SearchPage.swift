@@ -20,6 +20,8 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
     
     @IBOutlet weak var Open: UIBarButtonItem!
     @IBOutlet var ListOfUsers: UITableView!
+    
+    
     var currentCell = MyCustomCell.init(style: .default, reuseIdentifier: "cell")
     var dict = [[String:String]]()
     var users = [] as [String]
@@ -60,6 +62,18 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
             Open.action = #selector(SWRevealViewController.revealToggle(_:))
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
+        
+        let width = self.ListOfUsers.frame.width
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 30.0))
+        
+        let but = UIButton(type: UIButtonType.roundedRect)
+    
+        but.frame = CGRect(x: 0 , y: 0, width: 30, height: 30)
+        but.setTitle("Sort by : ", for: UIControlState.normal)
+       // but.addTarget(self, action: #selector(EditProfilTableViewController.ChangePhoto), for: .touchUpInside)
+        
+        headerView.addSubview(but)
+        but.titleLabel?.font = UIFont(name: "Arial", size: 10.0)
         
         self.ListOfUsers.tableHeaderView = UIView()
         self.ListOfUsers.tableFooterView = UIView()

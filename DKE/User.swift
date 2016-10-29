@@ -13,12 +13,16 @@ class CurrentUser{
     var lastName : String?
     var email : String?
     var major = "Not Provided"
-    var faculty : String?
+    var faculty = "Not Provided"
     var profilePicture : UIImage?
     var encodedString : String?
     var Address = "Not Provided"
     var Cities = "Not Provided"
     var snapchat = "Not Provided"
+    var committee = "Not Provided"
+    var currentProject = "Not Provided"
+    var isChair = false
+    var isActive = false
     
     init(Lastname : String, Firstname : String, email: String, major: String, faculty : String, profilePic : UIImage){
         self.firstName = Firstname
@@ -56,5 +60,19 @@ class CurrentUser{
         self.snapchat = snapchat
     }
     
+    func setCommittee(_ committee : String){
+        self.committee = committee
+    }
+    
+    func setCurrentProject(_ project : String){
+        self.currentProject = project
+    }
+    
+    func setChair(_ isChair : Bool){
+        self.isChair = isChair
+    }
+    func setActive (_ isActive : Bool){
+        self.isActive = isActive
+    }
 
 }

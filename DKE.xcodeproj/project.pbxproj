@@ -32,7 +32,10 @@
 		A772121B1DA3589A00A0504E /* EventPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A772121A1DA3589900A0504E /* EventPageViewController.swift */; };
 		A777C70C1D5C96D9006DE722 /* TextFieldCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */; };
 		A78F609F1DA5839E00A8C136 /* WelcomePageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */; };
-		A7F4491E1D60924100CFF628 /* GTMOAuth2ViewTouch.xib in Resources */ = {isa = PBXBuildFile; fileRef = A7F4491D1D60924100CFF628 /* GTMOAuth2ViewTouch.xib */; };
+		A79547CB1DB83A3D008E7226 /* EditProfilTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79547CA1DB83A3D008E7226 /* EditProfilTableViewController.swift */; };
+		A7A23B641DC40EE0001047BB /* CommitteeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A23B631DC40EE0001047BB /* CommitteeViewController.swift */; };
+		A7A23B661DC44717001047BB /* ReminderSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A23B651DC44716001047BB /* ReminderSelectionTableViewController.swift */; };
+		A7F896631DC051AB00E9A971 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F896621DC051AB00E9A971 /* SwitchTableViewCell.swift */; };
 		A7F8E9A71D577EEA00DA348A /* MyCustomCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F8E9A61D577EEA00DA348A /* MyCustomCell2.swift */; };
 		E77CCDF1E4EC9A2304C492C8 /* Pods_DKE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6983F1BFA45F27F6FF738EB6 /* Pods_DKE.framework */; };
 /* End PBXBuildFile section */
@@ -70,7 +73,10 @@
 		A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldCustomCell.swift; sourceTree = "<group>"; };
 		A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DKE-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomePageTableViewController.swift; sourceTree = "<group>"; };
-		A7F4491D1D60924100CFF628 /* GTMOAuth2ViewTouch.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = GTMOAuth2ViewTouch.xib; path = DKE/GTMOAuth2ViewTouch.xib; sourceTree = "<group>"; };
+		A79547CA1DB83A3D008E7226 /* EditProfilTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfilTableViewController.swift; sourceTree = "<group>"; };
+		A7A23B631DC40EE0001047BB /* CommitteeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommitteeViewController.swift; sourceTree = "<group>"; };
+		A7A23B651DC44716001047BB /* ReminderSelectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderSelectionTableViewController.swift; sourceTree = "<group>"; };
+		A7F896621DC051AB00E9A971 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A7F8E9A61D577EEA00DA348A /* MyCustomCell2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyCustomCell2.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -125,11 +131,14 @@
 			isa = PBXGroup;
 			children = (
 				A705F2471D8F4DEF0020B773 /* BackTableViewController.swift */,
-				A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */,
+				A7A23B631DC40EE0001047BB /* CommitteeViewController.swift */,
 				A73ED1BF1D63B1E9009AC762 /* CreateEventPageViewController.swift */,
 				A73ED1C11D63B205009AC762 /* DatePickerPageViewController.swift */,
 				A765BAFB1D50D05C003785C8 /* DateService.swift */,
 				A765BAF61D50CF20003785C8 /* EditProfileViewController.swift */,
+				A79547CA1DB83A3D008E7226 /* EditProfilTableViewController.swift */,
+				A772121A1DA3589900A0504E /* EventPageViewController.swift */,
+				A705F24B1D9186290020B773 /* HistoryDataViewController.swift */,
 				A75AB2E11D4E8FBF008FBF00 /* HomePageViewController.swift */,
 				A75AB2E31D4E9699008FBF00 /* LoginPageViewController.swift */,
 				A73ED1BD1D626E47009AC762 /* MainTabBarViewController.swift */,
@@ -137,11 +146,11 @@
 				A75AB2DD1D4E5A27008FBF00 /* SignUpPageViewController.swift */,
 				A77031041D528C2B009DFC3E /* ViewProfilViewController.swift */,
 				A705F2381D8AE82D0020B773 /* User.swift */,
+				A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */,
+				A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */,
 				A705F2451D8F479C0020B773 /* SWRevealViewController.m */,
 				A705F2441D8F478E0020B773 /* SWRevealViewController.h */,
-				A705F24B1D9186290020B773 /* HistoryDataViewController.swift */,
-				A772121A1DA3589900A0504E /* EventPageViewController.swift */,
-				A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */,
+				A7A23B651DC44716001047BB /* ReminderSelectionTableViewController.swift */,
 			);
 			name = Pages;
 			path = DKE;
@@ -156,7 +165,6 @@
 				A75AB2D01D4E3BDB008FBF00 /* Assets.xcassets */,
 				A75AB2D21D4E3BDB008FBF00 /* LaunchScreen.storyboard */,
 				A75AB2DF1D4E89F2008FBF00 /* GoogleService-Info.plist */,
-				A7F4491D1D60924100CFF628 /* GTMOAuth2ViewTouch.xib */,
 				A75AB2D51D4E3BDB008FBF00 /* Info.plist */,
 				A7F4491A1D5FC53A00CFF628 /* Cells */,
 				A75AB2C81D4E3BDA008FBF00 /* Pages */,
@@ -171,6 +179,7 @@
 				A7F8E9A61D577EEA00DA348A /* MyCustomCell2.swift */,
 				A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */,
 				A77212181DA3489700A0504E /* MyCustomCell3.swift */,
+				A7F896621DC051AB00E9A971 /* SwitchTableViewCell.swift */,
 			);
 			name = Cells;
 			sourceTree = "<group>";
@@ -243,7 +252,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A7F4491E1D60924100CFF628 /* GTMOAuth2ViewTouch.xib in Resources */,
 				A75AB2D41D4E3BDB008FBF00 /* LaunchScreen.storyboard in Resources */,
 				A75AB2E01D4E89F2008FBF00 /* GoogleService-Info.plist in Resources */,
 				A75AB2D11D4E3BDB008FBF00 /* Assets.xcassets in Resources */,
@@ -309,6 +317,7 @@
 				A73ED1C01D63B1EA009AC762 /* CreateEventPageViewController.swift in Sources */,
 				A73ED1BE1D626E47009AC762 /* MainTabBarViewController.swift in Sources */,
 				A73ED1C21D63B205009AC762 /* DatePickerPageViewController.swift in Sources */,
+				A79547CB1DB83A3D008E7226 /* EditProfilTableViewController.swift in Sources */,
 				A77031051D528C2B009DFC3E /* ViewProfilViewController.swift in Sources */,
 				A75AB2E21D4E8FBF008FBF00 /* HomePageViewController.swift in Sources */,
 				A705F2461D8F479C0020B773 /* SWRevealViewController.m in Sources */,
@@ -322,7 +331,10 @@
 				A777C70C1D5C96D9006DE722 /* TextFieldCustomCell.swift in Sources */,
 				A77212191DA3489A00A0504E /* MyCustomCell3.swift in Sources */,
 				A75AB2E41D4E9699008FBF00 /* LoginPageViewController.swift in Sources */,
+				A7F896631DC051AB00E9A971 /* SwitchTableViewCell.swift in Sources */,
+				A7A23B661DC44717001047BB /* ReminderSelectionTableViewController.swift in Sources */,
 				A743BE531D53445600C137FF /* MyCustomCell.swift in Sources */,
+				A7A23B641DC40EE0001047BB /* CommitteeViewController.swift in Sources */,
 				A772121B1DA3589A00A0504E /* EventPageViewController.swift in Sources */,
 				A765BAFC1D50D05C003785C8 /* DateService.swift in Sources */,
 				A7F8E9A71D577EEA00DA348A /* MyCustomCell2.swift in Sources */,

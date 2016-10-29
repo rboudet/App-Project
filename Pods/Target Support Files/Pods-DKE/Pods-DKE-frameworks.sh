@@ -85,13 +85,7 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-DKE/BRYXBanner.framework"
-  install_framework "Pods-DKE/GTMOAuth2.framework"
-  install_framework "Pods-DKE/GTMSessionFetcher.framework"
-  install_framework "Pods-DKE/GoogleAPIClient.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-DKE/BRYXBanner.framework"
-  install_framework "Pods-DKE/GTMOAuth2.framework"
-  install_framework "Pods-DKE/GTMSessionFetcher.framework"
-  install_framework "Pods-DKE/GoogleAPIClient.framework"
 fi
