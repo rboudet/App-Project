@@ -29,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         GIDSignIn.sharedInstance().clientID = FIRApp.defaultApp()?.options.clientID
         GIDSignIn.sharedInstance().delegate = self
-        GIDSignIn.sharedInstance().signInSilently()
+        //GIDSignIn.sharedInstance().signInSilently()
         GIDSignIn.sharedInstance().scopes.append("https://www.googleapis.com/auth/userinfo.profile")
         FIRDatabase.database().persistenceEnabled = true
 
@@ -67,10 +67,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     
     
     func sign(_ signIn: GIDSignIn!, didSignInFor user: GIDGoogleUser!, withError error: Error!) {
-        LoginPageViewController.indicator.isHidden = false
-        LoginPageViewController.indicator.startAnimating()
-        LoginPageViewController.indicator.backgroundColor = UIColor.white
-        
         if let error = error {
             print(error.localizedDescription)
             return
@@ -146,6 +142,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 if(data["Chair"] != nil){
                     Data.currentUser?.setChair(data["Chair"] as! Bool)
                 }
+                
+                HomePageViewController.isReady = true
             })
             
           }

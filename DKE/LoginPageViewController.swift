@@ -13,8 +13,8 @@ import GoogleSignIn
 
 class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
     
-    static var indicator = UIActivityIndicatorView()
-
+    var indicator = UIActivityIndicatorView()
+    static var isReady = false
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -22,11 +22,14 @@ class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
         GIDSignIn.sharedInstance().signInSilently()
         
         FIRAuth.auth()?.addStateDidChangeListener { auth, user in
+            
             if(user != nil){
+                self.activityIndicator()
+                self.indicator.startAnimating()
+                // if the user is a googleUser, add here a check that will wait until the data is loaded from google, ie a while loop that terminates once the information is here, or when we have passed the limit time. (find a way to do that)
                 self.performSegue(withIdentifier: "FirstSegue", sender: nil)
             }
         }
-
     }
     
         
@@ -66,20 +69,16 @@ class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
         
     
     func activityIndicator() {
-        LoginPageViewController.indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
-       LoginPageViewController.indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
-        LoginPageViewController.indicator.center = self.view.center
-        self.view.addSubview(LoginPageViewController.indicator)
-        LoginPageViewController.indicator.isHidden = true
+        indicator = UIActivityIndicatorView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        indicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
+        indicator.center = self.view.center
+        self.view.addSubview(indicator)
+        indicator.isHidden = true
         
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
-        if (segue.identifier == "LoginToTabMenu") {
-            LoginPageViewController.indicator.stopAnimating()
-            LoginPageViewController.indicator.hidesWhenStopped = true
-            
-        }
+       
     }
 
 

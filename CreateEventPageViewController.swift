@@ -58,8 +58,6 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     static var isFullDayEvent = false
     static var isEndFullDay = false
     
-    // It simply indicates whether the calendar list is expanded or not on the table view.
-    static var isReminderListExpanded = false
     
     // this variable will be used to distinguish the case of start date and end date
     var currentDatePicker = ""
@@ -68,15 +66,20 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     let reminderArray = ["1 hour before the event", "3 hours before the event", "24 hours before the event", "No reminders"]
     static var currentReminder : String?
     static var whoToRemind : String?
-    let whoToRemindArray = ["Finance Committee", "Betterment Committee", "Internal Committee", "External Committee", "Philanthropy Committee", "Social Committee", "House Committee", "Rush Committee", "Custom (choose by name who to remind"]
+    let whoToRemindArray = ["Finance", "Betterment", "Internal", "External", "Philanthropy", "Social", "House", "Rush", "Custom"]
     
     var toPass  : String?
+    static var isReminderCustom = false
+    static var tblPostData2 : UITableView?
     
+    static var selectedUsers : [String]?
     
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        CreateEventPageViewController.tblPostData2 = tblPostData
+        
         if (self.revealViewController() != nil){
             
             Open.target = self.revealViewController()
@@ -89,7 +92,6 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
         tblPostData.dataSource = self
         CreateEventPageViewController.isEditingEvent = false
         CreateEventPageViewController.isEditingLoc = false
-        CreateEventPageViewController.isReminderListExpanded = false
         
     }
     
@@ -170,17 +172,28 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if(section != 3){
-            return 1
+        var rows = 0
+        if(section == 0){
+            rows = 1
+        }
+        else if(section == 1){
+            rows = 1
+        }
+        else if(section == 2){
+            rows = 2
         }
         else{
-            if(!CreateEventPageViewController.isReminderListExpanded){
-                return 2
+            if(CreateEventPageViewController.currentReminder == "No reminders"){
+                rows = 1
             }
-            else{
-                return reminderArray.count + 1
+            else if(CreateEventPageViewController.isReminderCustom) {
+                rows = 3
+            }
+            else {
+                rows = 2
             }
         }
+        return rows
     }
   
     
@@ -210,8 +223,11 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell : UITableViewCell?
         let section = (indexPath as NSIndexPath).section
-        if (section == 3){
+        if (section == 3 && indexPath.row != 2){
             cell = self.tblPostData.dequeueReusableCell(withIdentifier: "ReminderCell")
+        }
+        else if(section == 3 && indexPath.row == 2){
+            cell = self.tblPostData.dequeueReusableCell(withIdentifier: "CustomReminderCell")
         }
         else {
             cell = self.tblPostData.dequeueReusableCell(withIdentifier: "EventCell")
@@ -300,6 +316,19 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
                     cell?.textLabel!.text = CreateEventPageViewController.whoToRemind!
                 }
             }
+            
+            else if (indexPath.row == 2){
+                // if we reach this, then the user has selected a 'custom' reminder
+                // we redirect the user to a list of all the current users, and he can select manually the ones he wants to remind
+                if(CreateEventPageViewController.selectedUsers == nil){
+                    cell?.textLabel!.text = "Select users to remind"
+
+                }
+                else {
+                    
+                    cell?.textLabel!.text = "\((CreateEventPageViewController.selectedUsers)!.count) users selected "
+                }
+            }
             cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
         }
         return cell!
@@ -322,6 +351,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     
     // this method is called when the user taps on one of the cells
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         if(CreateEventPageViewController.isEditingLoc){
             // we do this in case the user was already editing, it saves what the user has already inputed
             CreateEventPageViewController.isEditingLoc = false
@@ -359,8 +389,6 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             }
 
             CreateEventPageViewController.isEditingEvent = !CreateEventPageViewController.isEditingEvent
-            //tblPostData.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-            //tblPostData.reloadData()
             if(CreateEventPageViewController.isEditingEvent){
                 cell!.contentView.addSubview(CreateEventPageViewController.txtEvent!)
                 CreateEventPageViewController.txtEvent?.becomeFirstResponder()
@@ -377,9 +405,6 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
                 return
             }
             CreateEventPageViewController.isEditingLoc = !CreateEventPageViewController.isEditingLoc
-            //tblPostData.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.Automatic)
-            
-
             if(CreateEventPageViewController.isEditingLoc){
                 cell!.contentView.addSubview(CreateEventPageViewController.txtLocation!)
                 CreateEventPageViewController.txtLocation?.becomeFirstResponder()
@@ -411,6 +436,8 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             let indexSet = IndexSet(integer: 4)
             tblPostData.reloadSections(indexSet, with: UITableViewRowAnimation.automatic)*/
         }
+        let index = NSIndexSet(index: section)
+        //self.tblPostData.reloadSections(index as IndexSet, with: UITableViewRowAnimation.none)
         
     }
     
@@ -456,6 +483,8 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     @IBAction func post(_ sender: AnyObject) {
         
         
+        
+        // warning messages in case the user has forgotten to fill out some information
         if(CreateEventPageViewController.strEvent == nil){
             
             let alert = UIAlertController(title: "", message: "Please enter an event description", preferredStyle: UIAlertControllerStyle.alert)
@@ -485,44 +514,135 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             
             
         else{
-            var startDateString = ""
-            var endDateString = ""
-            
-            let calendar = Calendar.current
-            let startDateComponents = (calendar as NSCalendar).components([.day, .month, .year, .hour, .minute], from: CreateEventPageViewController.startDtEvent!)
-            let endDateComponents = (calendar as NSCalendar).components([.day, .month, .year, .hour, .minute], from: CreateEventPageViewController.endDtEvent!)
-            
-            
-            if(CreateEventPageViewController.isFullDayEvent){
-                startDateString = "\(startDateComponents.year!)-\(startDateComponents.month!)-\(startDateComponents.day!)"
-                endDateString = "\(endDateComponents.year!)-\(endDateComponents.month!)-\(endDateComponents.day!)"
-            }
-            else {
-                startDateString = "\(startDateComponents.year!)-\(startDateComponents.month!)-\(startDateComponents.day!)T\(startDateComponents.hour!):\(startDateComponents.minute!)"
-                endDateString = "\(endDateComponents.year!)-\(endDateComponents.month!)-\(endDateComponents.day!)T\(endDateComponents.hour!):\(endDateComponents.minute!)"
-            }
-          
             let eventTitle = CreateEventPageViewController.strEvent!
             let location = CreateEventPageViewController.strLocation!
             let name =  (Data.currentUser?.firstName)! + " " + (Data.currentUser?.lastName)!
-            Data.ref.child("Events").child(eventTitle).updateChildValues(["eventTitle" :eventTitle, "startDate" : startDateString, "endDate": endDateString, "location" : location, "Creator" : name, "Reminder" : CreateEventPageViewController.currentReminder!])
             
             
-            Data.ref.child("users").child(Data.userID!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) -> Void in
+            
+            // first we want to make sure that there isnt a event with the same title already
+            Data.ref.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) -> Void in
                 let data = snapshot.value as! [String : AnyObject]
-                var eventsCreated = [] as [String]
-                if(data["EventsCreated"] != nil){
-                    eventsCreated = (data["EventsCreated"] as? [String])!
-                    eventsCreated.append(eventTitle)
+                if (data["Events"] != nil){
+                    // then we have a problem
+                    if let event = data["Events"]![eventTitle]! {
+                        // this means there is already an event with the same title
+                        let alert = UIAlertController(title: "", message: "An Event with the same title is already present, please choose another one", preferredStyle: UIAlertControllerStyle.alert)
+                        alert.addAction(UIAlertAction(title: "ok", style: UIAlertActionStyle.default, handler: nil))
+                        self.present(alert, animated: true, completion: nil)
+                        return
+                    }
+                    
+                }
+                // then depending if the user has selected a certain committee to remind, we need to fetch all the users of that committee
+
+                if (!CreateEventPageViewController.isReminderCustom && CreateEventPageViewController.currentReminder! != "No reminders" && CreateEventPageViewController.currentReminder! != "All Actives"){
+                    // this means the user selected a certain committee to remind
+                    // then we want to go fectch the users from that specific committee
+                    let committee = CreateEventPageViewController.currentReminder!
+                    
+                    if (data[committee] != nil){
+                        CreateEventPageViewController.selectedUsers = (data[committee])?["Members"] as! [String]?
+                    }
+                    else {
+                         CreateEventPageViewController.selectedUsers = []
+                    }
+                    
+                }
+                if (CreateEventPageViewController.currentReminder! == "No reminders"){
+                    CreateEventPageViewController.selectedUsers = []
+                }
+                
+                
+                var startDateString = ""
+                var endDateString = ""
+                
+                let calendar = Calendar.current
+                let startDateComponents = (calendar as NSCalendar).components([.day, .month, .year, .hour, .minute], from: CreateEventPageViewController.startDtEvent!)
+                let endDateComponents = (calendar as NSCalendar).components([.day, .month, .year, .hour, .minute], from: CreateEventPageViewController.endDtEvent!)
+                
+                
+                let eventDay = startDateComponents.day!
+                let eventMonth = startDateComponents.month!
+                var month = ""
+                // the month is in integer form, so we transform it in a 3 letter representation of it
+                switch(eventMonth){
+                case 1 :
+                    month = "Jan"
+                    break
+                case 2:
+                    month = "Feb"
+                    break
+                case 3 :
+                    month = "Mar"
+                    break
+                case 4:
+                    month = "Apr"
+                    break
+                case 5 :
+                    month = "May"
+                    break
+                case 6:
+                    month = "Jun"
+                    break
+                case 7 :
+                    month = "Jul"
+                    break
+                case 8:
+                    month = "Aug"
+                    break
+                case 9 :
+                    month = "Sep"
+                    break
+                case 10:
+                    month = "Oct"
+                    break
+                case 11 :
+                    month = "Nov"
+                    break
+                case 12:
+                    month = "Dec"
+                    break
+                default :
+                    break
+                }
+                
+                if(CreateEventPageViewController.isFullDayEvent){
+                    startDateString = "\(startDateComponents.year!)-\(startDateComponents.month!)-\(startDateComponents.day!)"
+                    endDateString = "\(endDateComponents.year!)-\(endDateComponents.month!)-\(endDateComponents.day!)"
                 }
                 else {
-                    eventsCreated = [eventTitle]
+                    startDateString = "\(startDateComponents.year!)-\(startDateComponents.month!)-\(startDateComponents.day!)T\(startDateComponents.hour!):\(startDateComponents.minute!)"
+                    endDateString = "\(endDateComponents.year!)-\(endDateComponents.month!)-\(endDateComponents.day!)T\(endDateComponents.hour!):\(endDateComponents.minute!)"
                 }
-                Data.ref.child("users").child(Data.userID!).updateChildValues(["EventsCreated" : eventsCreated])
+                
+                
+                Data.ref.child("Events").child(eventTitle).updateChildValues(["eventTitle" :eventTitle, "startDate" : startDateString, "endDate": endDateString, "location" : location, "Creator" : name, "Reminder" : CreateEventPageViewController.currentReminder!,"usersToRemind" : CreateEventPageViewController.selectedUsers!, "Day" : String(eventDay), "Month" : month])
+                
+                
+                Data.ref.child("users").child(Data.userID!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) -> Void in
+                    let data = snapshot.value as! [String : AnyObject]
+                    var eventsCreated = [] as [String]
+                    if(data["EventsCreated"] != nil){
+                        eventsCreated = data["EventsCreated"] as! [String]
+                        eventsCreated.append(eventTitle)
+                    }
+                    else {
+                        eventsCreated = [eventTitle]
+                    }
+                    Data.ref.child("users").child(Data.userID!).updateChildValues(["EventsCreated" : eventsCreated])
+                })
+                
+                self.finishedPost()
+                
+            
             })
-            
-            finishedPost()
-            
+
+        
+        
+        
+        
+        
 //            var startDateString = ""
 //            var endDateString = ""
 //            let apiURLString = "https://www.googleapis.com/calendar/v3/calendars/\(CreateEventPageViewController.dictCurrentCalendar!["id"]!)/events?access_token=" + Data.accessToken
@@ -602,11 +722,16 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     }
 
     func finishedPost(){
+        // we restore all the variables to all the original values
+        CreateEventPageViewController.selectedUsers = nil
+        CreateEventPageViewController.isReminderCustom = false
         CreateEventPageViewController.startStrEventDate = ""
         CreateEventPageViewController.endStrEventDate = ""
         CreateEventPageViewController.strEvent = ""
         CreateEventPageViewController.strLocation = ""
-        tblPostData.reloadData()
+        CreateEventPageViewController.whoToRemind = nil
+        CreateEventPageViewController.currentReminder = nil
+        CreateEventPageViewController.tblPostData2?.reloadData()
         self.performSegue(withIdentifier: "BackToWelcomePage", sender: nil)
     }
     
@@ -617,11 +742,11 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             DatePickerPageViewController.toPass = self.currentDatePicker
         }
         
-        if (segue.identifier == "BackToWelcomePage"){
+        else if (segue.identifier == "BackToWelcomePage"){
             WelcomePageTableViewController.eventJustCreated = true
         }
         
-        if (segue.identifier == "ReminderSegue"){
+       else if (segue.identifier == "ReminderSegue"){
             let svc = segue.destination as! ReminderSelectionTableViewController
             if( self.toPass == "Who"){
                 if ( CreateEventPageViewController.whoToRemind != nil){
@@ -638,6 +763,17 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
             }
 
         }
+        else if( segue.identifier == "CreateEventToSelection"){
+            let svc = segue.destination as! SelectUsersTableViewController
+            
+            if(CreateEventPageViewController.selectedUsers != nil){
+                svc.selectedUsers = CreateEventPageViewController.selectedUsers
+            }
+            else {
+                svc.selectedUsers = []
+            }
+        }
+        
         
     }
 

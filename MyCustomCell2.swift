@@ -14,4 +14,10 @@ class MyCustomCell2: UITableViewCell {
     @IBOutlet weak var OrganisatorLabel: UILabel!
     @IBOutlet weak var GoingButton: UIButton!
     
+    @IBOutlet weak var StatusSegmented: UISegmentedControl!
+    
+    @IBOutlet weak var EventLabel: UILabel!
+    
+    @IBOutlet weak var MonthLabel: UILabel!
+    @IBOutlet weak var DayLabel: UILabel!
 }

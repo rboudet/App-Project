@@ -30,6 +30,7 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     
     
     static var justEditedProfil : Bool?
+    static var isReady = false
     
     
     var hobbyTextField : UITextField?
@@ -42,6 +43,8 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     var encodedString : String?
 
     
+    static var user : String?
+    
     
     // variables needed to display correctly the table view
     var indexInterest = 1
@@ -53,9 +56,17 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     var InterestTextFieldSetUp = false
 
     
+    override func viewWillAppear(_ animated: Bool) {
+        
+       
+    }
+    
     override func viewDidLoad() {
+    
+        
         super.viewDidLoad()
         
+        var i = 0
         if (self.revealViewController() != nil){
             
             Open.target = self.revealViewController()
@@ -63,42 +74,107 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
             self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
         }
         
+        let navigationBar = self.navigationController?.navigationBar
+        navigationBar?.barTintColor = UIColor.white
+
         
         InformationTableView.delegate = self
         InformationTableView.dataSource = self
         InformationTableView.backgroundColor = UIColor.white
         InformationTableView.tableHeaderView = nil
         
-        do{
+        // we set up the image View for the profile picture
+        ProfilePicture.layer.borderWidth = 1
+        ProfilePicture.layer.borderColor = UIColor.black.cgColor
+        ProfilePicture.layer.cornerRadius = ProfilePicture.frame.size.width/2
+        ProfilePicture.clipsToBounds = true
+        let width = ProfilePicture.frame.width
+        let height = ProfilePicture.frame.height
+        ProfilePicture.contentMode = .scaleToFill
+        
+        
+        
+        if (HomePageViewController.user! == Data.userID!){
+            
+            // if this is the current user, then we add a button to be able to edit his own profil
+            let editButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(HomePageViewController.editProfil))
+            editButton.tintColor = UIColor.black
+            self.navigationItem.rightBarButtonItem = editButton
+            
+            
             self.EmailLabel.text = "Email : " + (Data.currentUser?.email)!
             self.NameLabel.text = "Name : " + (Data.currentUser?.firstName)! + " " + Data.currentUser!.lastName!
             self.majorLabel.text = "Major : " + (Data.currentUser?.major)!
             self.AdressLabel.text = "Adress : " + (Data.currentUser?.Address)!
             self.CitiesLabel.text = "Cities lived in : " + (Data.currentUser?.Cities)!
             self.SnapchatLabel.text = "Snapchat : " + (Data.currentUser?.snapchat)!
-       
-        
-            ProfilePicture.layer.borderWidth = 1
-            ProfilePicture.layer.borderColor = UIColor.black.cgColor
-            ProfilePicture.layer.cornerRadius = ProfilePicture.frame.size.width/2
-            ProfilePicture.clipsToBounds = true
-            let width = ProfilePicture.frame.width
-            let height = ProfilePicture.frame.height
-            ProfilePicture.contentMode = .scaleToFill
-            let image = imageWithImage((Data.currentUser?.profilePicture)!, scaledToSize: CGSize(width: width - 30, height: height - 40))
+            let image = imageWithImage((Data.currentUser?.profilePicture)!, scaledToSize: CGSize(width: width - 30, height:
+                height - 40))
             ProfilePicture.image = image
-        }
-        catch{
-         print("No intern")
+            
         }
         
+        else{
+            Data.ref.child("users").child(HomePageViewController.user!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+                let data = snapshot.value as! [String : AnyObject]
+                
+                self.NameLabel.text = "Name : " + (data["firstName"] as! String) + " " + (data["lastName"] as! String)
+
+                if(data["email"] != nil){
+                    self.EmailLabel.text = "Email : " + (data["email"] as! String)
+                }
+                if(data["major"] != nil){
+                    self.majorLabel.text = "Major : " + (data["major"] as! String)
+                }
+                
+                if(data["cities"] != nil){
+                    self.CitiesLabel.text = "Cities lived in : " + (data["cities"] as! String)
+                }
+                if(data["address"] != nil){
+                    self.AdressLabel.text = "Adress : " + (data["address"] as! String)
+                }
+                if(data["snapchat"] != nil){
+                    self.SnapchatLabel.text = "Snapchat : " + (data["snapchat"] as! String)
+                }
+                
+                if(data["Committee"] != nil){
+                }
+                if(data["CommitteeProject"] != nil){
+                }
+                if(data["Active"] != nil){
+                }
+                if(data["Chair"] != nil){
+                }
+                if( data["ProfilePicture"] != nil){
+                    let photoString = data["ProfilePicture"] as! String
+                    let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+                    let decodedImage = UIImage(data: decodedData!)
+                    let image = self.imageWithImage(decodedImage!, scaledToSize: CGSize(width: width - 30, height: height - 40))
+                    self.ProfilePicture.image = image
+                    
+                }
+                
+
+                
+            })
+        }
+        
+      
+        
+        
+
+    
         // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    func editProfil(){
+        self.performSegue(withIdentifier: "EditProfil", sender: nil)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if(HomePageViewController.justEditedProfil != nil && HomePageViewController.justEditedProfil!){
-            let banner = Banner(title: "Profile Change Saved", subtitle: "", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:48.00/255.0, green:174.0/255.0, blue:51.5/255.0, alpha:1.000))
+            let banner = Banner(title: "Changes Saved", subtitle: "", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:48.00/255.0, green:174.0/255.0, blue:51.5/255.0, alpha:1.000))
             banner.dismissesOnTap = true
             banner.show(duration: 3.0)
             HomePageViewController.justEditedProfil = false

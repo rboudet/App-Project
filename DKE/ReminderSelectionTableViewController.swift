@@ -11,15 +11,14 @@ import UIKit
 class ReminderSelectionTableViewController: UITableViewController {
 
     @IBOutlet var ReminderTableView: UITableView!
-    var reminderArray : [String]?
+    var reminderArray = ["test"]
     var compareWith = " "
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        ReminderTableView.delegate = self
-        ReminderTableView.dataSource = self
-        ReminderTableView.reloadData()
+        ReminderTableView.tableHeaderView = UIView()
+        ReminderTableView.tableFooterView = UIView()
+        
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
 
@@ -36,20 +35,20 @@ class ReminderSelectionTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        print(reminderArray?.count)
-        return (reminderArray?.count)!
+        return (reminderArray.count)
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-        cell.textLabel?.text = reminderArray?[indexPath.row]
-        if(reminderArray?[indexPath.row] ==  compareWith ){
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.font = UIFont(name: "Arial", size: 12.0)
+        cell.textLabel?.text = reminderArray[indexPath.row]
+        if(reminderArray[indexPath.row] ==  compareWith ){
             cell.accessoryType = UITableViewCellAccessoryType.checkmark
         }
         else {
@@ -60,16 +59,24 @@ class ReminderSelectionTableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if (reminderArray?[0] == "Finance Committee"){
+        if (reminderArray[0] == "Finance"){
             // ie we are choosing who to select
-            CreateEventPageViewController.whoToRemind = reminderArray?[indexPath.row]
+            CreateEventPageViewController.whoToRemind = reminderArray[indexPath.row]
+            if (indexPath.row == reminderArray.count - 1){
+                CreateEventPageViewController.isReminderCustom = true
+            }
+            else {
+                CreateEventPageViewController.isReminderCustom = false
+            }
         }
         else {
-            CreateEventPageViewController.currentReminder = reminderArray?[indexPath.row]
+            // then we are choosing what form of reminder
+            CreateEventPageViewController.currentReminder = reminderArray[indexPath.row]
         }
         
-        self.dismiss(animated: true) {
-        }
+        CreateEventPageViewController.tblPostData2?.reloadData()
+        
+        _ = navigationController?.popViewController(animated: true)
     }
 
     /*

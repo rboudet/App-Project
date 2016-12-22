@@ -216,4 +216,10 @@ class BackTableViewController: UITableViewController {
         }
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if(segue.identifier == "goToProfile"){
+            HomePageViewController.user = Data.userID!
+        }
+    }
+    
 }

@@ -14,4 +14,6 @@ class MyCustomCell: UITableViewCell {
     @IBOutlet weak var cellSubtitle: UILabel!
     @IBOutlet weak var cellTitle: UILabel!
     @IBOutlet weak var cellLabel : UILabel!
+    @IBOutlet weak var SelectUser : UISwitch!
+    
 }

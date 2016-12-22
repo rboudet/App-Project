@@ -243,18 +243,21 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
         let section = indexPath.section
         let cell = EditProfileTableView.cellForRow(at: indexPath) as! MyCustomCell3
+        let set = NSIndexSet(index: section)
         if (section == 1){
             if (isEditingCommittee){
                 let newCommittee = cell.CommitteeLabel.text
                 self.committee = newCommittee
                 isEditingCommittee = !isEditingCommittee
-                self.EditProfileTableView.reloadData()
+                self.isChair = false
+                self.EditProfileTableView.reloadSections(set as IndexSet, with: UITableViewRowAnimation.none)
             }
             else {
                 isEditingCommittee = !isEditingCommittee
-                self.EditProfileTableView.reloadData()
+                self.EditProfileTableView.reloadSections(set as IndexSet, with: UITableViewRowAnimation.none)
             }
            
         }
@@ -328,6 +331,7 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
     
     @IBAction func DoneButtonTapped(_ sender: AnyObject) {
         
+        view.endEditing(true)         
         var index : NSIndexPath?
         var index2 : NSIndexPath?
         var cell : MyCustomCell3?
@@ -348,29 +352,30 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
                 // we record any changes being made by the user
             case ("Major : ") :
                 newMajor = newData
+                Data.ref.child("users").child(Data.userID!).updateChildValues(["major" : newMajor!])
                 if (newMajor! != self.major!){
-                    Data.ref.child("users").child(Data.userID!).updateChildValues(["major" : newMajor!])
                     Data.currentUser?.setMajor(newMajor!)
                 }
                 break
             case "Address : " :
                 newAddress = newData
+                Data.ref.child("users").child(Data.userID!).updateChildValues(["address" : newAddress!])
                 if (newAddress! != self.address!){
-                    Data.ref.child("users").child(Data.userID!).updateChildValues(["address" : newAddress!])
                     Data.currentUser?.setAddress(newAddress!)
                 }
                 break
             case("Cities Lived in : "):
                 newCities = newData
+                Data.ref.child("users").child(Data.userID!).updateChildValues(["cities" : newCities!])
+
                 if(newCities! != self.cities!){
-                    Data.ref.child("users").child(Data.userID!).updateChildValues(["cities" : newCities!])
                     Data.currentUser?.setCities(newCities!)
                 }
                 break
             case("Snapchat : "):
                 newSnapchat = newData
+                Data.ref.child("users").child(Data.userID!).updateChildValues(["snapchat" : newSnapchat!])
                 if (newSnapchat! != self.snapchat!){
-                    Data.ref.child("users").child(Data.userID!).updateChildValues(["snapchat" : newSnapchat!])
                     Data.currentUser?.setSnapchat(newSnapchat!)
                 }
                 break
@@ -381,32 +386,39 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
             default :
                 break
             }
+            
         }
         
         index = NSIndexPath(row: 0, section: 0)
         cell2 = EditProfileTableView.cellForRow(at: index as! IndexPath) as! SwitchTableViewCell?
         self.isActive = (cell2?.SwitchElement.isOn)!
         // we then update the committe and the current project.
+        
+        
         if (!isEditingCommittee){
             index = NSIndexPath(row:1, section: 1)
-            index2 = NSIndexPath (row:2, section: 1)
+            index2 = NSIndexPath(row:2, section: 1)
         }
         else{
             index = NSIndexPath(row: 8, section: 1)
-            index2 = NSIndexPath (row:9, section: 1)
+            index2 = NSIndexPath(row:9, section: 1)
 
         }
             
         cell = EditProfileTableView.cellForRow(at: index as! IndexPath) as! MyCustomCell3?
         // cell represents the project that the user is undertaking in his committee
-        // cell2 represents the active switch cell
+        // cell2 represents the chair switch cell
         cell2 = EditProfileTableView.cellForRow(at: index2 as! IndexPath) as! SwitchTableViewCell?
-        self.isChair = (cell2?.SwitchElement.isOn)!
         let newProject = cell?.InputTextField.text
+        let bool = cell2?.SwitchElement.isOn
+        if (bool != nil){
+            self.isChair = bool!
+        }
         // procced will represent the boolean that indicates if we save the data that the user has inputed
         
-        if(self.isChair! && (self.isChair! != Data.currentUser?.isChair)){
+        if((self.isChair! && (self.isChair! != Data.currentUser?.isChair)) || (self.isChair! && self.committee! != self.originalCommittee!)){
             // if the user says he is the chair for the first time, we ask again to make sure he is
+            // and if we see that the user puts himself chair as another committee we double check also
             let alert = UIAlertController(title: "Verification", message: "You said you are chair of the " + self.committee! + " committee. Do you wish to save this information?", preferredStyle: UIAlertControllerStyle.alert)
                 
             alert.addAction(UIAlertAction(title: "No", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
@@ -415,14 +427,16 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
             }))
                 
             alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
+                
+                self.fixCommitteeMembers()
+
                 Data.currentUser?.setCommittee(self.committee!)
                 Data.currentUser?.setActive(self.isActive!)
                 Data.currentUser?.setCurrentProject(newProject!)
                 Data.currentUser?.setChair(self.isChair!)
                 
-                Data.ref.child("users").child(Data.userID!).updateChildValues(["Committee" : self.committee!, "CommitteeProject" : newProject!, "Active" : self.isActive!, "Chair" : self.isChair! ])
-                Data.ref.child(self.committee!).updateChildValues(["Chair" : (Data.currentUser?.firstName)! + " " + (Data.currentUser?.lastName)!])
-                
+            Data.ref.child("users").child(Data.userID!).updateChildValues(["Committee" : self.committee!, "CommitteeProject" : newProject!, "Active" : self.isActive!, "Chair" :(cell2?.SwitchElement.isOn)!])
+                Data.ref.child(self.committee!).updateChildValues(["Chair" : Data.userID!])
                 
                 self.performSegue(withIdentifier: "EditProfileToProfile", sender: nil)
             }))
@@ -430,7 +444,9 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
             self.present(alert, animated: true, completion: nil)
                 
         }
-            
+        
+        
+
         // we update the new data to the user's information
         Data.currentUser?.setCommittee(self.committee!)
         Data.currentUser?.setActive(self.isActive!)
@@ -439,39 +455,133 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
            
         Data.ref.child("users").child(Data.userID!).updateChildValues(["Committee" : self.committee!, "CommitteeProject" : newProject!, "Active" : self.isActive!, "Chair" : self.isChair! ])
         
-        if(self.committee! != self.originalCommittee){
-            // ie the user has either put his committee or changed his committee
+        
+        self.fixCommitteeMembers()
             
-            Data.ref.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
-                    let data = snapshot.value as! [String : AnyObject]
-                    var currentUsers : [String]?
-                    if (data[self.committee!] != nil){
-                        
-                        currentUsers = data[self.committee!]?["Members"] as? [String]
-                        if(!((currentUsers?.contains(Data.userID!))!)){
-                            currentUsers?.append(Data.userID!)
-                        }
-                    }
-                    else {
-                        currentUsers = [Data.userID!]
-                    }
-                
-                    Data.ref.child(self.committee!).updateChildValues(["Members" : currentUsers!])
-                
-                    if (self.isChair!){
-                         Data.ref.child(self.committee!).updateChildValues(["Chair" : Data.userID!])
-                    }
-                
-            })
-        }
-        
-        
+        HomePageViewController.justEditedProfil = true
         self.performSegue(withIdentifier: "EditProfileToProfile", sender: nil)
     }
 
+    func fixCommitteeMembers(){
+        
+            // then we have to remove the user from the list of the other committee
     
-    
-    
+        // this part is for the previous committee
+        if(self.originalCommittee! != "Not Provided"){ // default committee
+            Data.ref.child(self.originalCommittee!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+                if let data = snapshot.value as? [String : AnyObject] {
+                if (self.committee! != self.originalCommittee!){
+                
+                    let oldUsers = data["Members"] as! [String]
+                    var newUsers : [String]?
+                    for i in 0...oldUsers.count-1{
+                        if(oldUsers[i] != Data.userID!){
+                            newUsers!.append(oldUsers[i])  // we keep everyone exept that specific user
+                        } 
+                    }
+                    if (newUsers != nil){
+                        Data.ref.child(self.originalCommittee!).updateChildValues(["Members" : newUsers!])
+                    }
+                    else {
+                        Data.ref.child(self.originalCommittee!).removeValue()
+                    // case distinction in case the user was the only one in the committee
+                    }
+
+                }
+            
+                if(data["Chair"] != nil){
+                    let currentChair = data["Chair"] as! String
+                    if (currentChair == Data.userID!){
+                        Data.ref.child(self.originalCommittee!).child("Chair").removeValue()
+                    }
+                
+                
+                }
+                }
+            })
+            
+        }
+        
+        // this part is for the new committee
+      /*  Data.ref.child(self.committee!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+            let data = snapshot.value as! [String : AnyObject]
+            if(data["Chair"] != nil){  // if there is already a different chair, we print an error message
+                let currentChair = data[self.committee!]?["Chair"] as? String
+                if(currentChair! != Data.userID!){
+                    if(self.isChair!){
+                        let alert = UIAlertController(title: "Error", message: "There is already a chair for " + self.committee! + " other information has been saved", preferredStyle: UIAlertControllerStyle.alert)
+                    
+                        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
+                            // we do not update the user's information
+                            self.isChair = false
+                            return
+                        }))
+                    }
+                }
+                else {
+                    if(!self.isChair!){ // the user was the chair, but now says he isnt anymore
+                        Data.ref.child(self.committee!).updateChildValues(["Chair" : ""])
+                    }
+                }
+                
+            }
+            else{
+                if(self.isChair!){
+                    Data.ref.child(self.committee!).updateChildValues(["Chair" : Data.userID!])
+                }
+            }
+            
+            
+        })
+        */
+        
+        Data.ref.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+            let data = snapshot.value as! [String : AnyObject]
+            var currentUsers : [String]?
+            if (data[self.committee!] != nil){
+                
+                currentUsers = data[self.committee!]?["Members"] as? [String]
+                if(!((currentUsers?.contains(Data.userID!))!)){
+                    currentUsers?.append(Data.userID!)  // we add the user to the list of people
+                }
+            }
+            else {
+                currentUsers = [Data.userID!]
+            }
+            Data.ref.child(self.committee!).updateChildValues(["Members" : currentUsers!])
+            let chair = data[self.committee!]?["Chair"]
+            print(data[self.committee!]?["Chair"])
+            if(chair != nil){  // if there is already a different chair, we print an error message
+                if let currentChair = data[self.committee!]?["Chair"] as? String {
+                if(currentChair != Data.userID!){
+                    if(self.isChair!){
+                        let alert = UIAlertController(title: "Error", message: "There is already a chair for " + self.committee! + " other information has been saved", preferredStyle: UIAlertControllerStyle.alert)
+                        
+                        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
+                            // we do not update the user's information
+                            self.isChair = false
+                            return
+                        }))
+                    }
+                }
+            }
+            }
+            else{
+                if(self.isChair!){
+                    Data.ref.child(self.committee!).updateChildValues(["Chair" : Data.userID!])
+                }
+            }
+            
+
+            
+            
+        })
+        
+        
+    }
+
+
+
      @IBAction func ReturnButtonTapped(_ sender: AnyObject) {
         self.performSegue(withIdentifier: "EditProfileToProfile", sender: nil)
 
