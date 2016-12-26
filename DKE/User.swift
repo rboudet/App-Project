@@ -11,6 +11,7 @@ import Foundation
 class CurrentUser{
     var firstName : String?
     var lastName : String?
+    var fullName : String?
     var email : String?
     var major = "Not Provided"
     var faculty = "Not Provided"
@@ -31,12 +32,14 @@ class CurrentUser{
         self.major = major
         self.faculty = faculty
         self.profilePicture = profilePic
+        self.fullName = Firstname + " " + Lastname
     }
     
     init(Lastname : String, Firstname : String, email: String){
         self.firstName = Firstname
         self.lastName = Lastname
         self.email = email
+        self.fullName = Firstname + " " + Lastname
     }
     
     func setPhoto(_ photo : UIImage){

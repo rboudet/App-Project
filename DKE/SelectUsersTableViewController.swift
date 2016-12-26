@@ -13,8 +13,10 @@ class SelectUsersTableViewController: UITableViewController {
     
     @IBOutlet var usersTableView: UITableView!
     var users = [[String : String]]()
-    var selectedUsers : [String]?
+    static var selectedUsers : [String]?
     var sections : [String]?
+    
+    var isAllSelected = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,14 +24,47 @@ class SelectUsersTableViewController: UITableViewController {
         users = SearchPage.dict
         sections = SearchPage.sections
         
+        // here we create a button in the navigation bar either to select all the users, or unselect all the users
+        // once it is tapped, it changes all the values of the selected / unselected users, and we reload the page
+        var buttonTitle = "Select all"
+        if(SelectUsersTableViewController.selectedUsers?.count == self.users.count){
+            // ie if all the users are already selected
+            buttonTitle = "Unselect all"
+            isAllSelected = true
+        }
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        
+        let button = UIBarButtonItem(title: buttonTitle, style: .plain, target: self, action: #selector(buttonTapped))
+        self.navigationItem.rightBarButtonItem  = button
     }
 
+    func buttonTapped(){
+        if(isAllSelected){
+            // here we want to unselect the users so we empty the selectedUsers array
+            SelectUsersTableViewController.selectedUsers = []
+        }else {
+            // here we want to select the users
+            for i in 0...users.count-1{
+                if(!(SelectUsersTableViewController.selectedUsers?.contains(self.users[i]["uid"]!))!){
+                    // then we want to add it
+                    SelectUsersTableViewController.selectedUsers?.append(self.users[i]["uid"]!)
+                }
+            }
+            
+        }
+        // we change the value of isAllSelected
+        isAllSelected = !isAllSelected
+        if(isAllSelected){
+            self.navigationItem.rightBarButtonItem?.title = "Unselect all"
+        }
+        else {
+            self.navigationItem.rightBarButtonItem?.title = "Select all"
+
+        }
+        
+        // and we reload the page
+        self.usersTableView.reloadData()
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -72,6 +107,11 @@ class SelectUsersTableViewController: UITableViewController {
     
 
     
+    // same code to display the users
+    // should only be able to select from active brothers
+    // for now not an issue, need to check, and have a seperate dictionary with only the active brothers
+    // and allow to pick users only from that dictionary
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var index = 0
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "SelectionUser") as! MyCustomCell
@@ -88,7 +128,7 @@ class SelectUsersTableViewController: UITableViewController {
             cell.cellTitle.text = users[index + indexPath.row]["name"]
             cell.cellSubtitle.text = users[index + indexPath.row]["major"]
             cell.cellLabel.text = users[index + indexPath.row]["uid"]
-            if(selectedUsers?.contains(users[index + indexPath.row]["uid"]!))!{
+            if(SelectUsersTableViewController.selectedUsers?.contains(users[index + indexPath.row]["uid"]!))!{
                 cell.SelectUser.isOn = true
             }
             else{

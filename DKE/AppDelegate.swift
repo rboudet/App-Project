@@ -142,8 +142,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
                 if(data["Chair"] != nil){
                     Data.currentUser?.setChair(data["Chair"] as! Bool)
                 }
-                
+                // here we ensure that the data has been retreived before we can display it
                 HomePageViewController.isReady = true
+                HomePageViewController.load()
             })
             
           }

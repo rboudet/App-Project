@@ -28,7 +28,10 @@
 		A765BAFE1D50E2A6003785C8 /* SearchPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A765BAFD1D50E2A6003785C8 /* SearchPage.swift */; };
 		A77212191DA3489A00A0504E /* MyCustomCell3.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77212181DA3489700A0504E /* MyCustomCell3.swift */; };
 		A777C70C1D5C96D9006DE722 /* TextFieldCustomCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */; };
+		A7785EBB1E0D7A3E006A59A0 /* DKE-Bridging-Header.h in Sources */ = {isa = PBXBuildFile; fileRef = A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */; };
+		A7785EBC1E0D7A3E006A59A0 /* SWRevealViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = A705F2441D8F478E0020B773 /* SWRevealViewController.h */; };
 		A779B70E1DC55368001C643E /* SelectUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A779B70D1DC55368001C643E /* SelectUsersTableViewController.swift */; };
+		A77DF9011E0EE0D500D62AD4 /* DiscussionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77DF9001E0EE0D500D62AD4 /* DiscussionTableViewController.swift */; };
 		A78F609F1DA5839E00A8C136 /* WelcomePageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */; };
 		A79547CB1DB83A3D008E7226 /* EditProfilTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79547CA1DB83A3D008E7226 /* EditProfilTableViewController.swift */; };
 		A7A23B641DC40EE0001047BB /* CommitteeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A23B631DC40EE0001047BB /* CommitteeViewController.swift */; };
@@ -69,6 +72,7 @@
 		A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldCustomCell.swift; sourceTree = "<group>"; };
 		A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DKE-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		A779B70D1DC55368001C643E /* SelectUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectUsersTableViewController.swift; sourceTree = "<group>"; };
+		A77DF9001E0EE0D500D62AD4 /* DiscussionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscussionTableViewController.swift; sourceTree = "<group>"; };
 		A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomePageTableViewController.swift; sourceTree = "<group>"; };
 		A79547CA1DB83A3D008E7226 /* EditProfilTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfilTableViewController.swift; sourceTree = "<group>"; };
 		A7A23B631DC40EE0001047BB /* CommitteeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommitteeViewController.swift; sourceTree = "<group>"; };
@@ -149,6 +153,7 @@
 				A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */,
 				A705F2451D8F479C0020B773 /* SWRevealViewController.m */,
 				A705F2441D8F478E0020B773 /* SWRevealViewController.h */,
+				A77DF9001E0EE0D500D62AD4 /* DiscussionTableViewController.swift */,
 			);
 			name = Pages;
 			path = DKE;
@@ -317,6 +322,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7785EBB1E0D7A3E006A59A0 /* DKE-Bridging-Header.h in Sources */,
+				A7785EBC1E0D7A3E006A59A0 /* SWRevealViewController.h in Sources */,
 				A73ED1C01D63B1EA009AC762 /* CreateEventPageViewController.swift in Sources */,
 				A73ED1BE1D626E47009AC762 /* MainTabBarViewController.swift in Sources */,
 				A73ED1C21D63B205009AC762 /* DatePickerPageViewController.swift in Sources */,
@@ -324,6 +331,7 @@
 				A75AB2E21D4E8FBF008FBF00 /* HomePageViewController.swift in Sources */,
 				A705F2461D8F479C0020B773 /* SWRevealViewController.m in Sources */,
 				A75AB2DE1D4E5A27008FBF00 /* SignUpPageViewController.swift in Sources */,
+				A77DF9011E0EE0D500D62AD4 /* DiscussionTableViewController.swift in Sources */,
 				A78F609F1DA5839E00A8C136 /* WelcomePageTableViewController.swift in Sources */,
 				A705F2391D8AE82D0020B773 /* User.swift in Sources */,
 				A779B70E1DC55368001C643E /* SelectUsersTableViewController.swift in Sources */,

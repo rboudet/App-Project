@@ -55,6 +55,10 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     var hobbyTextFieldSetUp = false
     var InterestTextFieldSetUp = false
 
+    // label that will appear when the page is loading
+    var LoadingLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
+
+    
     
     override func viewWillAppear(_ animated: Bool) {
         
@@ -62,105 +66,137 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     override func viewDidLoad() {
-    
-        
         super.viewDidLoad()
         
-        var i = 0
-        if (self.revealViewController() != nil){
+        // we only display the information, is isReady is true, ie that means that the information has been retreived from the database
+        // and there will be no errors
+        if (HomePageViewController.isReady) {
+            self.indicator.stopAnimating()
             
-            Open.target = self.revealViewController()
-            Open.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
-        }
+            
+            self.LoadingLabel.isHidden = true
+            self.EmailLabel.isHidden = false
+            self.NameLabel.isHidden = false
+            self.majorLabel.isHidden = false
+            self.AdressLabel.isHidden = false
+            self.CitiesLabel.isHidden = false
+            self.SnapchatLabel.isHidden = false
+
+            if (self.revealViewController() != nil){
+            
+                Open.target = self.revealViewController()
+                Open.action = #selector(SWRevealViewController.revealToggle(_:))
+                self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            }
         
-        let navigationBar = self.navigationController?.navigationBar
-        navigationBar?.barTintColor = UIColor.white
+            let navigationBar = self.navigationController?.navigationBar
+            navigationBar?.barTintColor = UIColor.white
 
         
-        InformationTableView.delegate = self
-        InformationTableView.dataSource = self
-        InformationTableView.backgroundColor = UIColor.white
-        InformationTableView.tableHeaderView = nil
+            InformationTableView.delegate = self
+            InformationTableView.dataSource = self
+            InformationTableView.backgroundColor = UIColor.white
+            InformationTableView.tableHeaderView = nil
         
-        // we set up the image View for the profile picture
-        ProfilePicture.layer.borderWidth = 1
-        ProfilePicture.layer.borderColor = UIColor.black.cgColor
-        ProfilePicture.layer.cornerRadius = ProfilePicture.frame.size.width/2
-        ProfilePicture.clipsToBounds = true
-        let width = ProfilePicture.frame.width
-        let height = ProfilePicture.frame.height
-        ProfilePicture.contentMode = .scaleToFill
+            // we set up the image View for the profile picture
+            ProfilePicture.layer.borderWidth = 1
+            ProfilePicture.layer.borderColor = UIColor.black.cgColor
+            ProfilePicture.layer.cornerRadius = ProfilePicture.frame.size.width/2
+            ProfilePicture.clipsToBounds = true
+            let width = ProfilePicture.frame.width
+            let height = ProfilePicture.frame.height
+            ProfilePicture.contentMode = .scaleToFill
         
         
         
-        if (HomePageViewController.user! == Data.userID!){
+            if (HomePageViewController.user! == Data.userID!){
             
-            // if this is the current user, then we add a button to be able to edit his own profil
-            let editButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(HomePageViewController.editProfil))
-            editButton.tintColor = UIColor.black
-            self.navigationItem.rightBarButtonItem = editButton
+                // if this is the current user, then we add a button to be able to edit his own profil
+                let editButton = UIBarButtonItem(barButtonSystemItem: .compose, target: self, action: #selector(HomePageViewController.editProfil))
+                editButton.tintColor = UIColor.black
+                self.navigationItem.rightBarButtonItem = editButton
             
             
-            self.EmailLabel.text = "Email : " + (Data.currentUser?.email)!
-            self.NameLabel.text = "Name : " + (Data.currentUser?.firstName)! + " " + Data.currentUser!.lastName!
-            self.majorLabel.text = "Major : " + (Data.currentUser?.major)!
-            self.AdressLabel.text = "Adress : " + (Data.currentUser?.Address)!
-            self.CitiesLabel.text = "Cities lived in : " + (Data.currentUser?.Cities)!
-            self.SnapchatLabel.text = "Snapchat : " + (Data.currentUser?.snapchat)!
-            let image = imageWithImage((Data.currentUser?.profilePicture)!, scaledToSize: CGSize(width: width - 30, height:
+                self.EmailLabel.text = "Email : " + (Data.currentUser?.email)!
+                self.NameLabel.text = "Name : " + (Data.currentUser?.firstName)! + " " + Data.currentUser!.lastName!
+                self.majorLabel.text = "Major : " + (Data.currentUser?.major)!
+                self.AdressLabel.text = "Adress : " + (Data.currentUser?.Address)!
+                self.CitiesLabel.text = "Cities lived in : " + (Data.currentUser?.Cities)!
+                self.SnapchatLabel.text = "Snapchat : " + (Data.currentUser?.snapchat)!
+                let image = imageWithImage((Data.currentUser?.profilePicture)!, scaledToSize: CGSize(width: width - 30, height:
                 height - 40))
-            ProfilePicture.image = image
+                ProfilePicture.image = image
             
-        }
+            }
         
-        else{
-            Data.ref.child("users").child(HomePageViewController.user!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
-                let data = snapshot.value as! [String : AnyObject]
+            else{
+                Data.ref.child("users").child(HomePageViewController.user!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+                    let data = snapshot.value as! [String : AnyObject]
                 
-                self.NameLabel.text = "Name : " + (data["firstName"] as! String) + " " + (data["lastName"] as! String)
+                    self.NameLabel.text = "Name : " + (data["firstName"] as! String) + " " + (data["lastName"] as! String)
 
-                if(data["email"] != nil){
-                    self.EmailLabel.text = "Email : " + (data["email"] as! String)
-                }
-                if(data["major"] != nil){
-                    self.majorLabel.text = "Major : " + (data["major"] as! String)
-                }
+                    if(data["email"] != nil){
+                        self.EmailLabel.text = "Email : " + (data["email"] as! String)
+                    }
+                    if(data["major"] != nil){
+                        self.majorLabel.text = "Major : " + (data["major"] as! String)
+                    }
                 
-                if(data["cities"] != nil){
-                    self.CitiesLabel.text = "Cities lived in : " + (data["cities"] as! String)
-                }
-                if(data["address"] != nil){
-                    self.AdressLabel.text = "Adress : " + (data["address"] as! String)
-                }
-                if(data["snapchat"] != nil){
-                    self.SnapchatLabel.text = "Snapchat : " + (data["snapchat"] as! String)
-                }
+                    if(data["cities"] != nil){
+                        self.CitiesLabel.text = "Cities lived in : " + (data["cities"] as! String)
+                    }
+                    if(data["address"] != nil){
+                        self.AdressLabel.text = "Adress : " + (data["address"] as! String)
+                    }
+                    if(data["snapchat"] != nil){
+                        self.SnapchatLabel.text = "Snapchat : " + (data["snapchat"] as! String)
+                    }
                 
-                if(data["Committee"] != nil){
-                }
-                if(data["CommitteeProject"] != nil){
-                }
-                if(data["Active"] != nil){
-                }
-                if(data["Chair"] != nil){
-                }
-                if( data["ProfilePicture"] != nil){
-                    let photoString = data["ProfilePicture"] as! String
-                    let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
-                    let decodedImage = UIImage(data: decodedData!)
-                    let image = self.imageWithImage(decodedImage!, scaledToSize: CGSize(width: width - 30, height: height - 40))
-                    self.ProfilePicture.image = image
+                    if(data["Committee"] != nil){
+                    }
+                    if(data["CommitteeProject"] != nil){
+                    }
+                    if(data["Active"] != nil){
+                    }
+                    if(data["Chair"] != nil){
+                    }
+                    if( data["ProfilePicture"] != nil){
+                        let photoString = data["ProfilePicture"] as! String
+                        let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+                        let decodedImage = UIImage(data: decodedData!)
+                        let image = self.imageWithImage(decodedImage!, scaledToSize: CGSize(width: width - 30, height: height - 40))
+                        self.ProfilePicture.image = image
                     
-                }
+                    }
                 
 
                 
-            })
+                })
+            }
+           
+        
         }
-        
-      
-        
+        else{
+            // we wait for the data to be retreived, it will reload the page, and we can display the information
+            self.activityIndicator()
+            self.indicator.startAnimating()
+            LoginPageViewController.checkConnection()
+            // we also add a label saying 'loading'
+            LoadingLabel.isHidden = false
+            LoadingLabel.center = self.view.center
+            LoadingLabel.text = "Loading"
+            LoadingLabel.textColor = UIColor.gray
+            self.view.addSubview(LoadingLabel)
+            
+            
+            self.EmailLabel.isHidden = true
+            self.NameLabel.isHidden = true
+            self.majorLabel.isHidden = true
+            self.AdressLabel.isHidden = true
+            self.CitiesLabel.isHidden = true
+            self.SnapchatLabel.isHidden = true
+
+        }
         
 
     

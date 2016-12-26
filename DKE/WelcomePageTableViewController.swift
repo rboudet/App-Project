@@ -1,3 +1,4 @@
+
 //
 //  WelcomePageTableViewController.swift
 //  DKE
@@ -54,7 +55,12 @@ class WelcomePageTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        EventTableView.tableFooterView = UIView()
         eventsAttendingComplete = [[String : String ]]()
+        
+        // we want to set up a waiting system to make sure that all the user's info has been loaded, and that the user cannot do anything while the information has not been retreived
+        
+        //print(Data.currentUser!)
         
         // if an event has just been created succesfully, a green banner displays
         if (WelcomePageTableViewController.eventJustCreated){
@@ -230,7 +236,7 @@ class WelcomePageTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -416,9 +422,10 @@ class WelcomePageTableViewController: UITableViewController {
         cell.isSelected = false
         let navigationBar = self.navigationController?.navigationBar
         let subviews = navigationBar?.subviews
-        let label = subviews?[3] as! UILabel
-        label.text = cell.EventTitleLabel.text!
-        WelcomePageTableViewController.indicator.startAnimating()
+        if (cell.EventTitleLabel.text! != "No upcoming events" || cell.EventTitleLabel.text! != "You are not attending any events"){
+            let label = subviews?[3] as! UILabel
+            label.text = cell.EventTitleLabel.text!
+        }
         return indexPath
     }
     
@@ -608,6 +615,13 @@ class WelcomePageTableViewController: UITableViewController {
     }
     
     
+    
+    
+   
+
+    
+    
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "EventToEventPage"){
            // let svc = segue.destination as! EventPageTableViewController;
@@ -616,6 +630,7 @@ class WelcomePageTableViewController: UITableViewController {
         }
         
     }
+    
     
     
     

@@ -40,9 +40,15 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
         
         imagePicker.delegate = self
 
+        
+        
+        // to hide the keyboard when the user scrolls the tableView
+        EditProfileTableView.keyboardDismissMode = UIScrollViewKeyboardDismissMode.onDrag
+        
+        
         // we first initilize all the variables to the current user's
         self.title = "Edit Profile"
-        self.name = (Data.currentUser?.firstName)! + " " + (Data.currentUser?.lastName)!
+        self.name = Data.currentUser?.fullName
         self.email = Data.currentUser?.email
         self.major = Data.currentUser?.major
         self.address = Data.currentUser?.Address
@@ -244,12 +250,20 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+        var cell : UITableViewCell
         let section = indexPath.section
-        let cell = EditProfileTableView.cellForRow(at: indexPath) as! MyCustomCell3
+
+        if((section == 0 && indexPath.row == 0) || (section == 1 && indexPath.row == 2 && !isEditingCommittee) || ( section == 1 && indexPath.row == self.committees.count + 1 && isEditingCommittee)){
+            cell = EditProfileTableView.dequeueReusableCell(withIdentifier: "SwitchCell") as! SwitchTableViewCell
+        }
+        else {
+            cell = EditProfileTableView.cellForRow(at: indexPath) as! MyCustomCell3
+        }
+        
         let set = NSIndexSet(index: section)
         if (section == 1){
-            if (isEditingCommittee){
-                let newCommittee = cell.CommitteeLabel.text
+            if (isEditingCommittee && indexPath.row != self.committees.count + 1){
+                let newCommittee = (cell as! MyCustomCell3).CommitteeLabel.text
                 self.committee = newCommittee
                 isEditingCommittee = !isEditingCommittee
                 self.isChair = false
@@ -627,12 +641,8 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
         UIGraphicsBeginImageContextWithOptions(newSize, false, 0.0)
         image.draw(in: CGRect(x: 0, y: 0, width: newSize.width, height: newSize.height))
         let newImage : UIImage  = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext();
-        return newImage;
+        UIGraphicsEndImageContext()
+        return newImage
     }
-    
-    
-    
-    
 
 }

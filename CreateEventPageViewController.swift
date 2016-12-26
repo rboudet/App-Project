@@ -516,7 +516,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
         else{
             let eventTitle = CreateEventPageViewController.strEvent!
             let location = CreateEventPageViewController.strLocation!
-            let name =  (Data.currentUser?.firstName)! + " " + (Data.currentUser?.lastName)!
+            let name =  Data.currentUser?.fullName
             
             
             
@@ -731,7 +731,9 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
         CreateEventPageViewController.strLocation = ""
         CreateEventPageViewController.whoToRemind = nil
         CreateEventPageViewController.currentReminder = nil
+        SelectUsersTableViewController.selectedUsers = []
         CreateEventPageViewController.tblPostData2?.reloadData()
+        
         self.performSegue(withIdentifier: "BackToWelcomePage", sender: nil)
     }
     
@@ -764,13 +766,11 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
 
         }
         else if( segue.identifier == "CreateEventToSelection"){
-            let svc = segue.destination as! SelectUsersTableViewController
-            
             if(CreateEventPageViewController.selectedUsers != nil){
-                svc.selectedUsers = CreateEventPageViewController.selectedUsers
+                SelectUsersTableViewController.selectedUsers = CreateEventPageViewController.selectedUsers
             }
             else {
-                svc.selectedUsers = []
+                SelectUsersTableViewController.selectedUsers = []
             }
         }
         
