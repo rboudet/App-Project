@@ -209,7 +209,10 @@ class EventPageTableViewController: UITableViewController {
                 }
                 else if (indexPath.row == 2){
                     if (elementSelected == 0){
-                        cell2 = EventTableView.dequeueReusableCell(withIdentifier: "AboutCell")!
+                        cell = EventTableView.dequeueReusableCell(withIdentifier: "AboutCell") as! MyCustomCell2
+                        
+                        
+                       /* cell2 = EventTableView.dequeueReusableCell(withIdentifier: "AboutCell")!
                         cell2.textLabel?.text = "The creator of the event has not specified more information, contact him for more"
                         let x = cell2.frame.maxX
                         let y = cell2.frame.maxY
@@ -218,7 +221,7 @@ class EventPageTableViewController: UITableViewController {
                         let button = UIButton(frame: CGRect(x: x-20, y: y-20, width: 20, height: 20))
                         button.setTitle("see More", for: UIControlState.normal)
                         cell2.addSubview(button)
-                        return cell2
+                        return cell2*/
                     }
                     else{
                         cell = EventTableView.dequeueReusableCell(withIdentifier: "DiscussionCell") as! MyCustomCell2
