@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import GoogleSignIn
 import Firebase
 
-class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate, GIDSignInUIDelegate {
+class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UITextFieldDelegate {
 
     
     @IBOutlet weak var Open: UIBarButtonItem!

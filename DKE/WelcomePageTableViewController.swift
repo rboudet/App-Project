@@ -16,7 +16,7 @@ import BRYXBanner
 class WelcomePageTableViewController: UITableViewController {
 
     
-    
+    static var toPass = ""
     var accessToken = ""
     var currentList = [] as [String]
     var eventString = ""
@@ -69,6 +69,9 @@ class WelcomePageTableViewController: UITableViewController {
         }
         
         
+        _ = Data.currentUser
+        
+        
         EventTableView.tableFooterView = UIView()
         EventTableView.tableHeaderView = UIView()
         
@@ -109,6 +112,7 @@ class WelcomePageTableViewController: UITableViewController {
                     major = data["major"] as? String
                 }
                 
+                print(uid)
                 
                 SearchPage.dict.append(["firstLetter" : firstLetter, "uid": uid, "name" : name, "major" : major! , "EncodedString" : data["ProfilePicture"] as! String])
                 

@@ -42,7 +42,7 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     var interestsShown = 3
     var encodedString : String?
 
-    
+    // profile that we are trying to show
     static var user : String?
     
     
@@ -56,7 +56,6 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     var InterestTextFieldSetUp = false
 
     // label that will appear when the page is loading
-    var LoadingLabel = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 40))
 
     
     
@@ -74,7 +73,6 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
             self.indicator.stopAnimating()
             
             
-            self.LoadingLabel.isHidden = true
             self.EmailLabel.isHidden = false
             self.NameLabel.isHidden = false
             self.majorLabel.isHidden = false
@@ -180,14 +178,7 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
             // we wait for the data to be retreived, it will reload the page, and we can display the information
             self.activityIndicator()
             self.indicator.startAnimating()
-            LoginPageViewController.checkConnection()
-            // we also add a label saying 'loading'
-            LoadingLabel.isHidden = false
-            LoadingLabel.center = self.view.center
-            LoadingLabel.text = "Loading"
-            LoadingLabel.textColor = UIColor.gray
-            self.view.addSubview(LoadingLabel)
-            
+            _ = LoginPageViewController.checkConnection()
             
             self.EmailLabel.isHidden = true
             self.NameLabel.isHidden = true

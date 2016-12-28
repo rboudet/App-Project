@@ -9,6 +9,7 @@
 
 import UIKit
 import FirebaseAuth
+import Firebase
 
 
 class SignUpPageViewController: UIViewController {
@@ -52,7 +53,63 @@ class SignUpPageViewController: UIViewController {
                 Data.currentUser = CurrentUser(Lastname: lastName!, Firstname: firstName!, email: email!)
                 Data.ref.child("users").child(Data.userID!).updateChildValues(["firstName": firstName!, "lastName" : lastName!, "email": email!, "uid": Data.userID!])
                 
-                self.performSegue(withIdentifier: "SignUpToWelcomePage", sender: nil)
+                Data.ref.child("users").child(Data.userID!).observe(FIRDataEventType.value, with: { (snapshot) in
+                    // we display the info that the user has already put on his profil
+                    let data = snapshot.value as! [String : AnyObject]
+                    if( data["ProfilePicture"] != nil){
+                        let photoString = data["ProfilePicture"] as! String
+                        Data.currentUser?.setEncodedString(photoString)
+                        let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+                        let decodedImage = UIImage(data: decodedData!)
+                        Data.currentUser?.setPhoto(decodedImage!)
+                        
+                    }
+                    else {
+                       
+                        // the encodedString is what will be stored in firebase (cannot store images)
+                        let photo = #imageLiteral(resourceName: "User-50")
+                        let photoData = UIImagePNGRepresentation(photo)
+                        let encodedString = photoData?.base64EncodedString(options: .lineLength64Characters)
+                        Data.ref.child("users").child(Data.userID!).updateChildValues(["ProfilePicture" : encodedString!])
+                        
+                        Data.currentUser?.setEncodedString(encodedString!)
+                        Data.currentUser?.setPhoto(photo)
+                    }
+                    if(data["major"] != nil){
+                        Data.currentUser?.setMajor(data["major"] as! String)
+                    }
+                    
+                    if(data["cities"] != nil){
+                        Data.currentUser?.setCities(data["cities"] as! String)
+                    }
+                    if(data["address"] != nil){
+                        Data.currentUser?.setAddress(data["address"] as! String)
+                    }
+                    if(data["snapchat"] != nil){
+                        Data.currentUser?.setSnapchat(data["snapchat"] as! String)
+                    }
+                    if(data["Committee"] != nil){
+                        Data.currentUser?.setCommittee(data["Committee"] as! String)
+                    }
+                    if(data["CommitteeProject"] != nil){
+                        Data.currentUser?.setCurrentProject(data["CommitteeProject"] as! String)
+                    }
+                    if(data["Active"] != nil){
+                        Data.currentUser?.setActive(data["Active"] as! Bool)
+                    }
+                    if(data["Chair"] != nil){
+                        Data.currentUser?.setChair(data["Chair"] as! Bool)
+                    }
+                    // here we ensure that the data has been retreived before we can display it
+                    HomePageViewController.isReady = true
+                    HomePageViewController.load()
+                    self.performSegue(withIdentifier: "SignUpToWelcomePage", sender: nil)
+
+                })
+
+                
+                
+                
             }
                 
                 

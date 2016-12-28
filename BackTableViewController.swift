@@ -8,7 +8,6 @@
 
 import Foundation
 import Firebase
-import GoogleSignIn
 
 class BackTableViewController: UITableViewController {
     @IBOutlet var LinkCellTableView: UITableView!
@@ -132,7 +131,6 @@ class BackTableViewController: UITableViewController {
             let alert = UIAlertController(title: "Logging out", message: "Are you sure you want to sign out of your account", preferredStyle: UIAlertControllerStyle.alert)
             
             alert.addAction(UIAlertAction(title: "Yes", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
-                GIDSignIn.sharedInstance().signOut()
                 try! FIRAuth.auth()!.signOut()
                 self.performSegue(withIdentifier: "HomeToLogin", sender: nil)
             }))

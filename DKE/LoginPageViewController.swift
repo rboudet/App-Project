@@ -14,7 +14,7 @@ import BRYXBanner
 
 
 
-class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
+class LoginPageViewController: UIViewController{
     
     @IBOutlet weak var EmailTextField: UITextField!
     
@@ -23,6 +23,9 @@ class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
     
     var indicator = UIActivityIndicatorView()
     static var isReady = false
+    
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -42,10 +45,13 @@ class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
         else {
             FIRAuth.auth()?.addStateDidChangeListener { auth, user in
                 if(user != nil){
+                    
                     // if the user is already logged in, we go straight in the app
                     self.activityIndicator()
                     self.indicator.startAnimating()
-                    self.performSegue(withIdentifier: "FirstSegue", sender: nil)
+                    
+                    self.loadInformation()
+
                 }
             }
 
@@ -110,8 +116,8 @@ class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
     }
     
     @IBAction func LogInButtonTapped(_ sender: Any) {
-        let email = emailTextField.text
-        let password = passwordTextField.text
+        let email = EmailTextField.text
+        let password = PasswordTextField.text
         
         if(email != nil && password != nil) {
             FIRAuth.auth()?.signIn(withEmail: email!, password: password!) { (user, error) in
@@ -125,63 +131,93 @@ class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
                     Data.user = user
                     Data.userID = user?.uid
                     
-                    
-                    Data.ref.child("users").child(Data.userID!).observe(FIRDataEventType.value, with: { (snapshot) in
-                        // we display the info that the user has already put on his profil
-                        let data = snapshot.value as! [String : AnyObject]
-                        if( data["ProfilePicture"] != nil){
-                            let photoString = data["ProfilePicture"] as! String
-                            Data.currentUser?.setEncodedString(photoString)
-                            let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
-                            let decodedImage = UIImage(data: decodedData!)
-                            Data.currentUser?.setPhoto(decodedImage!)
-                            
-                        }
-                        else {
-                           
-                            let photo = #imageLiteral(resourceName: "User-50")
-                            let data = UIImagePNGRepresentation(photo) as? NSData
-                            let encodedString = data?.base64EncodedString(options: .lineLength64Characters)
-                            Data.ref.child("users").child(Data.userID!).updateChildValues(["ProfilePicture" : encodedString!])
-                            Data.currentUser?.setEncodedString(encodedString!)
-                            Data.currentUser?.setPhoto(photo!)
-                        }
-                        if(data["major"] != nil){
-                            Data.currentUser?.setMajor(data["major"] as! String)
-                        }
-                        
-                        if(data["cities"] != nil){
-                            Data.currentUser?.setCities(data["cities"] as! String)
-                        }
-                        if(data["address"] != nil){
-                            Data.currentUser?.setAddress(data["address"] as! String)
-                        }
-                        if(data["snapchat"] != nil){
-                            Data.currentUser?.setSnapchat(data["snapchat"] as! String)
-                        }
-                        if(data["Committee"] != nil){
-                            Data.currentUser?.setCommittee(data["Committee"] as! String)
-                        }
-                        if(data["CommitteeProject"] != nil){
-                            Data.currentUser?.setCurrentProject(data["CommitteeProject"] as! String)
-                        }
-                        if(data["Active"] != nil){
-                            Data.currentUser?.setActive(data["Active"] as! Bool)
-                        }
-                        if(data["Chair"] != nil){
-                            Data.currentUser?.setChair(data["Chair"] as! Bool)
-                        }
-                        // here we ensure that the data has been retreived before we can display it
-                        HomePageViewController.isReady = true
-                        HomePageViewController.load()
-                        self.performSegue(withIdentifier: "FirstSegue", sender: nil)
-                    })
-                    
-                    
+                    self.loadInformation()
                     
                 }
             }
         }
+        
+    }
+    
+    
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+        super.touchesBegan(touches, with: event)
+    }
+    
+    
+    func loadInformation(){
+        Data.ref.child("users").child(Data.userID!).observe(FIRDataEventType.value, with: { (snapshot) in
+            // we display the info that the user has already put on his profil
+            let data = snapshot.value as! [String : AnyObject]
+            let email = data["email"] as! String
+            let firstName = data["firstName"] as! String
+            let lastName = data["lastName"] as! String
+            
+            Data.currentUser = CurrentUser(Lastname: lastName, Firstname: firstName, email: email)
+            
+            
+            
+            if( data["ProfilePicture"] != nil){
+                let photoString = data["ProfilePicture"] as! String
+                Data.currentUser?.setEncodedString(photoString)
+                let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+                let decodedImage = UIImage(data: decodedData!)
+                
+                print(photoString)
+                
+                Data.currentUser?.setPhoto(decodedImage!)
+                _ = Data.currentUser
+                
+            }
+            else {
+                
+                let photo = #imageLiteral(resourceName: "User-50")
+                let data = UIImagePNGRepresentation(photo)
+                let encodedString = data?.base64EncodedString(options: .lineLength64Characters)
+                Data.ref.child("users").child(Data.userID!).updateChildValues(["ProfilePicture" : encodedString!])
+                Data.currentUser?.setEncodedString(encodedString!)
+                Data.currentUser?.setPhoto(photo)
+            }
+            if(data["major"] != nil){
+                Data.currentUser?.setMajor(data["major"] as! String)
+            }
+            
+            if(data["cities"] != nil){
+                Data.currentUser?.setCities(data["cities"] as! String)
+            }
+            if(data["address"] != nil){
+                Data.currentUser?.setAddress(data["address"] as! String)
+            }
+            if(data["snapchat"] != nil){
+                Data.currentUser?.setSnapchat(data["snapchat"] as! String)
+            }
+            if(data["Committee"] != nil){
+                Data.currentUser?.setCommittee(data["Committee"] as! String)
+            }
+            if(data["CommitteeProject"] != nil){
+                Data.currentUser?.setCurrentProject(data["CommitteeProject"] as! String)
+            }
+            if(data["Active"] != nil){
+                Data.currentUser?.setActive(data["Active"] as! Bool)
+            }
+            if(data["Chair"] != nil){
+                Data.currentUser?.setChair(data["Chair"] as! Bool)
+            }
+            
+           
+
+            
+            // here we ensure that the data has been retreived before we can display it
+            HomePageViewController.isReady = true
+            HomePageViewController.load()
+            self.performSegue(withIdentifier: "FirstSegue", sender: nil)
+
+        })
+
+        
+        
         
     }
     
