@@ -8,7 +8,7 @@
 
 
 import UIKit
-import Firebase
+import FirebaseAuth
 
 
 class SignUpPageViewController: UIViewController {
@@ -18,10 +18,9 @@ class SignUpPageViewController: UIViewController {
     @IBOutlet weak var lastNameTextField: UITextField!
     @IBOutlet weak var firstNameTextField: UITextField!
     @IBOutlet weak var emailTextField: UITextField!
-  
     @IBOutlet weak var passwordTextField: UITextField!
-   
     @IBOutlet weak var confirmPasswordTextField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -48,10 +47,16 @@ class SignUpPageViewController: UIViewController {
         
         FIRAuth.auth()?.createUser(withEmail: email!, password: password!) { (user, error) in
             if (error == nil){
+                
+                Data.userID = user?.uid
                 Data.currentUser = CurrentUser(Lastname: lastName!, Firstname: firstName!, email: email!)
                 Data.ref.child("users").child(Data.userID!).updateChildValues(["firstName": firstName!, "lastName" : lastName!, "email": email!, "uid": Data.userID!])
-
+                
+                self.performSegue(withIdentifier: "SignUpToWelcomePage", sender: nil)
             }
+                
+                
+                
             else {
                 
                 let alert = UIAlertController(title: "Error", message: "Your inputs are invalid, please enter valid information", preferredStyle: UIAlertControllerStyle.alert)

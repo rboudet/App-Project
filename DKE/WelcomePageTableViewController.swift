@@ -17,11 +17,9 @@ class WelcomePageTableViewController: UITableViewController {
 
     
     
-    static var toPass = ""
     var accessToken = ""
     var currentList = [] as [String]
     var eventString = ""
-    var isGoogleAccount = false
     
     var events = [[String : String ]]()
     let output = UITextView()

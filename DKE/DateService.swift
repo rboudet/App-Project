@@ -15,9 +15,5 @@ class Data {
     static var ref = FIRDatabase.database().reference()
     static var userID = FIRAuth.auth()?.currentUser?.uid
     static var user = FIRAuth.auth()?.currentUser
-    static var googleUser : GIDGoogleUser?
-    static var accessToken = ""
-    static var refreshToken = ""
-    static var expires = Date()
     static var currentUser : CurrentUser?
 }

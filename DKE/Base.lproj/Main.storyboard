@@ -58,7 +58,7 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Sign up"/>
                                 <connections>
-                                    <segue destination="dst-tc-Gg1" kind="show" id="yfo-7V-1eD"/>
+                                    <segue destination="dst-tc-Gg1" kind="presentation" id="K6P-f4-uLQ"/>
                                 </connections>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="----------OR----------" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fBh-md-NwQ">
@@ -202,6 +202,9 @@
                                 <rect key="frame" x="204" y="263" width="96" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <state key="normal" title="Back To Login"/>
+                                <connections>
+                                    <segue destination="BYZ-38-t0r" kind="presentation" id="0SE-qD-jC8"/>
+                                </connections>
                             </button>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Last Name                     " textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="U47-TF-ctW">
                                 <rect key="frame" x="14" y="199" width="170" height="30"/>
@@ -334,6 +337,7 @@
                         <outlet property="firstNameTextField" destination="rqA-v8-ryT" id="yu1-Cj-wqf"/>
                         <outlet property="lastNameTextField" destination="U47-TF-ctW" id="s2f-D2-eXC"/>
                         <outlet property="passwordTextField" destination="bhg-cG-W1W" id="bOA-yR-HDG"/>
+                        <segue destination="0oT-cP-GyR" kind="presentation" identifier="SignUpToWelcomePage" id="zGh-aA-Qby"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="f1U-Dd-TMk" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2511,7 +2515,7 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="Izh-Ah-cDD"/>
-        <segue reference="efu-uK-s1x"/>
+        <segue reference="0SE-qD-jC8"/>
         <segue reference="Jbi-pJ-V4P"/>
         <segue reference="BPe-Vo-cW5"/>
         <segue reference="rCG-qZ-X53"/>

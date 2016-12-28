@@ -9,7 +9,6 @@
 #ifndef DKE_Bridging_Header_h
 #define DKE_Bridging_Header_h
 
-#import <GoogleSignIn/GoogleSignIn.h>
 #import "SWRevealViewController.h"
 
 #endif /* DKE_Bridging_Header_h */
