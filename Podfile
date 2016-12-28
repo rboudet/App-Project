@@ -11,6 +11,5 @@ target 'DKE' do
     pod 'Firebase/Database'
     pod 'Firebase/Core'
     pod 'BRYXBanner'
-    pod 'Google/SignIn'
     pod 'ReadMoreTextView'
 end

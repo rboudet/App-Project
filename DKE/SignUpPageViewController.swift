@@ -48,24 +48,8 @@ class SignUpPageViewController: UIViewController {
         
         FIRAuth.auth()?.createUser(withEmail: email!, password: password!) { (user, error) in
             if (error == nil){
-                self.ref.child("users").child(user!.uid).setValue(["firstName": firstName!, "lastName" : lastName!, "email": email!])
-                self.ref.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
-                    let userID = FIRAuth.auth()?.currentUser?.uid
-                    let data = snapshot.value as! [String : AnyObject]
-                    if(data["list"] == nil){
-                        let list = [userID!]
-                        self.ref.updateChildValues(["list" : list])
-                    }
-                    else {
-                        var currentList = data["list"] as! [String]
-                        currentList.append(userID!)
-                        self.ref.updateChildValues(["list" : currentList])
-                    }
-                    
-
-                    })
-               
-                self.performSegue(withIdentifier: "SignUpToTabMenu", sender: nil)
+                Data.currentUser = CurrentUser(Lastname: lastName!, Firstname: firstName!, email: email!)
+                Data.ref.child("users").child(Data.userID!).updateChildValues(["firstName": firstName!, "lastName" : lastName!, "email": email!, "uid": Data.userID!])
 
             }
             else {

@@ -13,7 +13,14 @@ import SystemConfiguration
 import BRYXBanner
 
 
+
+
 class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
+    
+    @IBOutlet weak var EmailTextField: UITextField!
+    
+    @IBOutlet weak var PasswordTextField: UITextField!
+    
     
     var indicator = UIActivityIndicatorView()
     static var isReady = false
@@ -145,6 +152,13 @@ class LoginPageViewController: UIViewController, GIDSignInUIDelegate{
         
         
     }
+    
+    @IBAction func LogInButtonTapped(_ sender: Any) {
+    }
+    
+    
+   
+    
 
 
     
