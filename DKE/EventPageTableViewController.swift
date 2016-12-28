@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ReadMoreTextView
 import Firebase
 
 class EventPageTableViewController: UITableViewController {
@@ -211,7 +212,16 @@ class EventPageTableViewController: UITableViewController {
                     if (elementSelected == 0){
                         cell = EventTableView.dequeueReusableCell(withIdentifier: "AboutCell") as! MyCustomCell2
                         
+                        let cellFrame = cell.frame
                         
+                        let textView = ReadMoreTextView(frame: cellFrame)
+                        textView.text = "Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,"
+                        textView.shouldTrim = true
+                        textView.readMoreText = " ... Read More"
+                        textView.readLessText = "Read Less"
+                        textView.maximumNumberOfLines = 4
+                        
+                        cell.addSubview(textView)
                        /* cell2 = EventTableView.dequeueReusableCell(withIdentifier: "AboutCell")!
                         cell2.textLabel?.text = "The creator of the event has not specified more information, contact him for more"
                         let x = cell2.frame.maxX

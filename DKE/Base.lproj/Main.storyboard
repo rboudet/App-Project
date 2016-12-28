@@ -334,7 +334,7 @@
         <scene sceneID="MRV-VK-xhf">
             <objects>
                 <navigationController id="QMc-Jp-Orm" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="hY8-vU-VC4">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="hY8-vU-VC4">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1146,24 +1146,7 @@
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Mtu-EH-YQd" id="yuU-Qt-GqN">
                                     <rect key="frame" x="0.0" y="0.0" width="375" height="61"/>
                                     <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" text="Event Description" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="rqN-R7-cg5">
-                                            <rect key="frame" x="28" y="8" width="286" height="49"/>
-                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                            <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                        </textView>
-                                    </subviews>
-                                    <constraints>
-                                        <constraint firstItem="rqN-R7-cg5" firstAttribute="leading" secondItem="yuU-Qt-GqN" secondAttribute="leadingMargin" constant="20" id="V6n-RS-g6V"/>
-                                        <constraint firstAttribute="bottomMargin" secondItem="rqN-R7-cg5" secondAttribute="bottom" constant="-4" id="b4S-vZ-Ejb"/>
-                                        <constraint firstAttribute="trailingMargin" secondItem="rqN-R7-cg5" secondAttribute="trailing" constant="53" id="hYK-mG-KUt"/>
-                                        <constraint firstItem="rqN-R7-cg5" firstAttribute="top" secondItem="yuU-Qt-GqN" secondAttribute="topMargin" id="l5w-Xj-5EW"/>
-                                    </constraints>
                                 </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="DiscussionTextView" destination="rqN-R7-cg5" id="m0I-f1-JNB"/>
-                                </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MessageCell" textLabel="Tbi-b9-ypR" detailTextLabel="1iJ-vE-5d4" rowHeight="58" style="IBUITableViewCellStyleSubtitle" id="s6Y-2o-DbH" customClass="MyCustomCell2" customModule="DKE" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="335" width="375" height="58"/>
@@ -1283,7 +1266,7 @@
         <scene sceneID="CtG-LG-Dd0">
             <objects>
                 <navigationController id="ufw-Fz-T41" sceneMemberID="viewController">
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="b8e-89-3Qg">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="b8e-89-3Qg">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -2417,7 +2400,7 @@
             <objects>
                 <navigationController id="Am2-Yv-vok" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="jU3-T1-SzF"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="etv-fG-rkr">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="etv-fG-rkr">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
