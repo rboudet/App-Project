@@ -35,6 +35,9 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
     var isChair : Bool?
     var isActive : Bool?
 
+    
+    static var hasChanged = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -185,12 +188,12 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
                 (cell as! MyCustomCell3).InputTextField.text = self.address!
 
             }
-            if (indexPath.row == 4 ){
+            if (indexPath.row == 5 ){
                 (cell as! MyCustomCell3).Label.text = "Cities Lived in : "
                 (cell as! MyCustomCell3).InputTextField.text = self.cities!
 
             }
-            if (indexPath.row == 5 ){
+            if (indexPath.row == 6 ){
                 (cell as! MyCustomCell3).Label.text = "Snapchat : "
                 (cell as! MyCustomCell3).InputTextField.text = self.snapchat!
 
@@ -368,13 +371,15 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
                 newMajor = newData
                 Data.ref.child("users").child(Data.userID!).updateChildValues(["major" : newMajor!])
                 if (newMajor! != self.major!){
+                    EditProfilTableViewController.hasChanged = true
                     Data.currentUser?.setMajor(newMajor!)
                 }
                 break
-            case "Address : " :
+            case ("Address : " ):
                 newAddress = newData
                 Data.ref.child("users").child(Data.userID!).updateChildValues(["address" : newAddress!])
                 if (newAddress! != self.address!){
+                    EditProfilTableViewController.hasChanged = true
                     Data.currentUser?.setAddress(newAddress!)
                 }
                 break
@@ -383,6 +388,7 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
                 Data.ref.child("users").child(Data.userID!).updateChildValues(["cities" : newCities!])
 
                 if(newCities! != self.cities!){
+                    EditProfilTableViewController.hasChanged = true
                     Data.currentUser?.setCities(newCities!)
                 }
                 break
@@ -390,12 +396,9 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
                 newSnapchat = newData
                 Data.ref.child("users").child(Data.userID!).updateChildValues(["snapchat" : newSnapchat!])
                 if (newSnapchat! != self.snapchat!){
+                    EditProfilTableViewController.hasChanged = true
                     Data.currentUser?.setSnapchat(newSnapchat!)
                 }
-                break
-            case("Email : "):
-                newEmail = newData
-               // Data.ref.child("users").child(Data.userID!).updateChildValues(["major" : newMajor!])
                 break
             default :
                 break
@@ -471,8 +474,6 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
         
         
         self.fixCommitteeMembers()
-            
-        HomePageViewController.justEditedProfil = true
         self.performSegue(withIdentifier: "EditProfileToProfile", sender: nil)
     }
 
@@ -485,7 +486,7 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
             Data.ref.child(self.originalCommittee!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
                 if let data = snapshot.value as? [String : AnyObject] {
                 if (self.committee! != self.originalCommittee!){
-                
+                    EditProfilTableViewController.hasChanged = true
                     let oldUsers = data["Members"] as! [String]
                     var newUsers : [String]?
                     for i in 0...oldUsers.count-1{
@@ -548,48 +549,45 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
             
         })
         */
-        
-        Data.ref.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
-            let data = snapshot.value as! [String : AnyObject]
-            var currentUsers : [String]?
-            if (data[self.committee!] != nil){
+        if(self.committee! != "Not Provided"){
+            Data.ref.observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) in
+                let data = snapshot.value as! [String : AnyObject]
+                var currentUsers : [String]?
+                if (data[self.committee!] != nil){
                 
-                currentUsers = data[self.committee!]?["Members"] as? [String]
-                if(!((currentUsers?.contains(Data.userID!))!)){
-                    currentUsers?.append(Data.userID!)  // we add the user to the list of people
-                }
-            }
-            else {
-                currentUsers = [Data.userID!]
-            }
-            Data.ref.child(self.committee!).updateChildValues(["Members" : currentUsers!])
-            let chair = data[self.committee!]?["Chair"]
-            print(data[self.committee!]?["Chair"])
-            if(chair != nil){  // if there is already a different chair, we print an error message
-                if let currentChair = data[self.committee!]?["Chair"] as? String {
-                if(currentChair != Data.userID!){
-                    if(self.isChair!){
-                        let alert = UIAlertController(title: "Error", message: "There is already a chair for " + self.committee! + " other information has been saved", preferredStyle: UIAlertControllerStyle.alert)
-                        
-                        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
-                            // we do not update the user's information
-                            self.isChair = false
-                            return
-                        }))
+                    currentUsers = data[self.committee!]?["Members"] as? [String]
+                    if(!((currentUsers?.contains(Data.userID!))!)){
+                        currentUsers?.append(Data.userID!)  // we add the user to the list of people
                     }
                 }
-            }
-            }
-            else{
-                if(self.isChair!){
-                    Data.ref.child(self.committee!).updateChildValues(["Chair" : Data.userID!])
+                else {
+                    currentUsers = [Data.userID!]
                 }
-            }
-            
-
-            
-            
-        })
+                Data.ref.child(self.committee!).updateChildValues(["Members" : currentUsers!])
+                let chair = data[self.committee!]?["Chair"]
+                if(chair != nil){  // if there is already a different chair, we print an error message
+                    if let currentChair = data[self.committee!]?["Chair"] as? String {
+                        if(currentChair != Data.userID!){
+                            if(self.isChair!){
+                                let alert = UIAlertController(title: "Error", message: "There is already a chair for " + self.committee! + " other information has been saved", preferredStyle: UIAlertControllerStyle.alert)
+                        
+                                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertActionStyle.default, handler: {  (action: UIAlertAction!) in
+                                    // we do not update the user's information
+                                    self.isChair = false
+                                    return
+                                }))
+                            }
+                        }
+                    }
+                }
+                else{
+                    if(self.isChair!){
+                        Data.ref.child(self.committee!).updateChildValues(["Chair" : Data.userID!])
+                    }
+                }
+        
+            })
+        }
         
         
     }
@@ -643,6 +641,9 @@ class EditProfilTableViewController: UITableViewController, UIImagePickerControl
         let newImage : UIImage  = UIGraphicsGetImageFromCurrentImageContext()!
         UIGraphicsEndImageContext()
         return newImage
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     }
 
 }

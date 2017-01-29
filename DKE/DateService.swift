@@ -10,9 +10,14 @@ import Foundation
 import Firebase
 
 class Data {
-
+    static var isSelectingUsers = false
     static var ref = FIRDatabase.database().reference()
     static var userID = FIRAuth.auth()?.currentUser?.uid
     static var user = FIRAuth.auth()?.currentUser
-    static var currentUser : CurrentUser?
+    static var currentUser : User?
+    
+    static func setCurrentUser(firstName : String, lastName : String, email : String){
+        let user = User(Lastname: lastName, Firstname: firstName, email: email)
+        Data.currentUser = user
+    }
 }

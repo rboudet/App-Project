@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		84E47083E11A3920EDF804E7 /* Pods_DKE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7635D4795B9A06EEFFE5781 /* Pods_DKE.framework */; };
 		A705F2391D8AE82D0020B773 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = A705F2381D8AE82D0020B773 /* User.swift */; };
 		A705F2461D8F479C0020B773 /* SWRevealViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A705F2451D8F479C0020B773 /* SWRevealViewController.m */; };
 		A705F2481D8F4DEF0020B773 /* BackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A705F2471D8F4DEF0020B773 /* BackTableViewController.swift */; };
@@ -33,18 +32,26 @@
 		A7785EBC1E0D7A3E006A59A0 /* SWRevealViewController.h in Sources */ = {isa = PBXBuildFile; fileRef = A705F2441D8F478E0020B773 /* SWRevealViewController.h */; };
 		A779B70E1DC55368001C643E /* SelectUsersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A779B70D1DC55368001C643E /* SelectUsersTableViewController.swift */; };
 		A77DF9011E0EE0D500D62AD4 /* DiscussionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A77DF9001E0EE0D500D62AD4 /* DiscussionTableViewController.swift */; };
+		A787B2771E3DBCF800BAC183 /* ChatMessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A787B2761E3DBCF800BAC183 /* ChatMessageCell.swift */; };
 		A78F609F1DA5839E00A8C136 /* WelcomePageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */; };
 		A79547CB1DB83A3D008E7226 /* EditProfilTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79547CA1DB83A3D008E7226 /* EditProfilTableViewController.swift */; };
 		A7A23B641DC40EE0001047BB /* CommitteeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A23B631DC40EE0001047BB /* CommitteeViewController.swift */; };
 		A7A23B661DC44717001047BB /* ReminderSelectionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7A23B651DC44716001047BB /* ReminderSelectionTableViewController.swift */; };
 		A7DDBE711DD952CC00671716 /* EventPageTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7DDBE701DD952CC00671716 /* EventPageTableViewController.swift */; };
+		A7E37CC41E3D23A2007B75EC /* ChatLogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E37CC31E3D23A2007B75EC /* ChatLogController.swift */; };
+		A7E37CC61E3D267B007B75EC /* MessagesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E37CC51E3D267B007B75EC /* MessagesTableViewController.swift */; };
+		A7E37CCB1E3D42FC007B75EC /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E37CCA1E3D42FC007B75EC /* Extensions.swift */; };
+		A7E37CCD1E3D59C8007B75EC /* NewMessageController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E37CCC1E3D59C8007B75EC /* NewMessageController.swift */; };
+		A7E37CCF1E3D71E5007B75EC /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7E37CCE1E3D71E5007B75EC /* Message.swift */; };
 		A7F896631DC051AB00E9A971 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F896621DC051AB00E9A971 /* SwitchTableViewCell.swift */; };
 		A7F8E9A71D577EEA00DA348A /* MyCustomCell2.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7F8E9A61D577EEA00DA348A /* MyCustomCell2.swift */; };
+		F4FFE577A78AD699A2C3440F /* Pods_DKE.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D96BF54F09CC714EAF084DD9 /* Pods_DKE.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		5F87A05E0C7D28E17D2AB1BD /* Pods-DKE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DKE.release.xcconfig"; path = "Pods/Target Support Files/Pods-DKE/Pods-DKE.release.xcconfig"; sourceTree = "<group>"; };
-		A705F2381D8AE82D0020B773 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		218658951D7756A6E52E2EF5 /* Pods-DKE.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DKE.release.xcconfig"; path = "Pods/Target Support Files/Pods-DKE/Pods-DKE.release.xcconfig"; sourceTree = "<group>"; };
+		3A75C3250644CC60024DA861 /* Pods-DKE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DKE.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DKE/Pods-DKE.debug.xcconfig"; sourceTree = "<group>"; };
+		A705F2381D8AE82D0020B773 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = DKE/User.swift; sourceTree = "<group>"; };
 		A705F2441D8F478E0020B773 /* SWRevealViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SWRevealViewController.h; sourceTree = "<group>"; };
 		A705F2451D8F479C0020B773 /* SWRevealViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SWRevealViewController.m; sourceTree = "<group>"; };
 		A705F2471D8F4DEF0020B773 /* BackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BackTableViewController.swift; path = ../BackTableViewController.swift; sourceTree = "<group>"; };
@@ -64,23 +71,28 @@
 		A75AB2DF1D4E89F2008FBF00 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "DKE/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A75AB2E11D4E8FBF008FBF00 /* HomePageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		A75AB2E31D4E9699008FBF00 /* LoginPageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPageViewController.swift; sourceTree = "<group>"; };
-		A765BAFB1D50D05C003785C8 /* DateService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DateService.swift; sourceTree = "<group>"; };
+		A765BAFB1D50D05C003785C8 /* DateService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DateService.swift; path = DKE/DateService.swift; sourceTree = "<group>"; };
 		A765BAFD1D50E2A6003785C8 /* SearchPage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SearchPage.swift; path = ../SearchPage.swift; sourceTree = "<group>"; };
 		A77212181DA3489700A0504E /* MyCustomCell3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyCustomCell3.swift; sourceTree = "<group>"; };
 		A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextFieldCustomCell.swift; sourceTree = "<group>"; };
 		A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DKE-Bridging-Header.h"; sourceTree = SOURCE_ROOT; };
 		A779B70D1DC55368001C643E /* SelectUsersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectUsersTableViewController.swift; sourceTree = "<group>"; };
 		A77DF9001E0EE0D500D62AD4 /* DiscussionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiscussionTableViewController.swift; sourceTree = "<group>"; };
+		A787B2761E3DBCF800BAC183 /* ChatMessageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessageCell.swift; sourceTree = "<group>"; };
 		A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WelcomePageTableViewController.swift; sourceTree = "<group>"; };
 		A79547CA1DB83A3D008E7226 /* EditProfilTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditProfilTableViewController.swift; sourceTree = "<group>"; };
 		A7A23B631DC40EE0001047BB /* CommitteeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommitteeViewController.swift; sourceTree = "<group>"; };
 		A7A23B651DC44716001047BB /* ReminderSelectionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReminderSelectionTableViewController.swift; sourceTree = "<group>"; };
 		A7DDBE701DD952CC00671716 /* EventPageTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventPageTableViewController.swift; sourceTree = "<group>"; };
+		A7E37CC31E3D23A2007B75EC /* ChatLogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatLogController.swift; sourceTree = "<group>"; };
+		A7E37CC51E3D267B007B75EC /* MessagesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagesTableViewController.swift; sourceTree = "<group>"; };
+		A7E37CCA1E3D42FC007B75EC /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		A7E37CCC1E3D59C8007B75EC /* NewMessageController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NewMessageController.swift; sourceTree = "<group>"; };
+		A7E37CCE1E3D71E5007B75EC /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		A7F896621DC051AB00E9A971 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		A7F8E9A61D577EEA00DA348A /* MyCustomCell2.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyCustomCell2.swift; sourceTree = "<group>"; };
 		A7FF85DF1DC983090073C2E9 /* DKE.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DKE.entitlements; path = DKE/DKE.entitlements; sourceTree = "<group>"; };
-		B7635D4795B9A06EEFFE5781 /* Pods_DKE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DKE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		DB4A833322E3A95F8B4BF188 /* Pods-DKE.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DKE.debug.xcconfig"; path = "Pods/Target Support Files/Pods-DKE/Pods-DKE.debug.xcconfig"; sourceTree = "<group>"; };
+		D96BF54F09CC714EAF084DD9 /* Pods_DKE.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DKE.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,26 +100,17 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84E47083E11A3920EDF804E7 /* Pods_DKE.framework in Frameworks */,
+				F4FFE577A78AD699A2C3440F /* Pods_DKE.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		4E5BCF4911F2C2E304CDC9EC /* Pods */ = {
+		42BF367655F3F89237BCE50D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DB4A833322E3A95F8B4BF188 /* Pods-DKE.debug.xcconfig */,
-				5F87A05E0C7D28E17D2AB1BD /* Pods-DKE.release.xcconfig */,
-			);
-			name = Pods;
-			sourceTree = "<group>";
-		};
-		97F23917C3803C06B553A9AA /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B7635D4795B9A06EEFFE5781 /* Pods_DKE.framework */,
+				D96BF54F09CC714EAF084DD9 /* Pods_DKE.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -117,8 +120,8 @@
 			children = (
 				A765BAFA1D50CF7F003785C8 /* DKE */,
 				A75AB2C71D4E3BDA008FBF00 /* Products */,
-				4E5BCF4911F2C2E304CDC9EC /* Pods */,
-				97F23917C3803C06B553A9AA /* Frameworks */,
+				D5A4E7FFF9ECF3819196E363 /* Pods */,
+				42BF367655F3F89237BCE50D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -137,7 +140,6 @@
 				A7A23B631DC40EE0001047BB /* CommitteeViewController.swift */,
 				A73ED1BF1D63B1E9009AC762 /* CreateEventPageViewController.swift */,
 				A73ED1C11D63B205009AC762 /* DatePickerPageViewController.swift */,
-				A765BAFB1D50D05C003785C8 /* DateService.swift */,
 				A79547CA1DB83A3D008E7226 /* EditProfilTableViewController.swift */,
 				A7DDBE701DD952CC00671716 /* EventPageTableViewController.swift */,
 				A705F24B1D9186290020B773 /* HistoryDataViewController.swift */,
@@ -148,12 +150,14 @@
 				A765BAFD1D50E2A6003785C8 /* SearchPage.swift */,
 				A779B70D1DC55368001C643E /* SelectUsersTableViewController.swift */,
 				A75AB2DD1D4E5A27008FBF00 /* SignUpPageViewController.swift */,
-				A705F2381D8AE82D0020B773 /* User.swift */,
 				A78F609E1DA5839E00A8C136 /* WelcomePageTableViewController.swift */,
 				A777C70D1D5CB048006DE722 /* DKE-Bridging-Header.h */,
 				A705F2451D8F479C0020B773 /* SWRevealViewController.m */,
 				A705F2441D8F478E0020B773 /* SWRevealViewController.h */,
 				A77DF9001E0EE0D500D62AD4 /* DiscussionTableViewController.swift */,
+				A7E37CC31E3D23A2007B75EC /* ChatLogController.swift */,
+				A7E37CC51E3D267B007B75EC /* MessagesTableViewController.swift */,
+				A7E37CCC1E3D59C8007B75EC /* NewMessageController.swift */,
 			);
 			name = Pages;
 			path = DKE;
@@ -164,6 +168,7 @@
 			children = (
 				A7FF85DF1DC983090073C2E9 /* DKE.entitlements */,
 				A75AB2C91D4E3BDB008FBF00 /* AppDelegate.swift */,
+				A7E37CC91E3D42EF007B75EC /* Helpers */,
 				A75AB2CB1D4E3BDB008FBF00 /* ViewController.swift */,
 				A75AB2CD1D4E3BDB008FBF00 /* Main.storyboard */,
 				A75AB2D01D4E3BDB008FBF00 /* Assets.xcassets */,
@@ -176,6 +181,17 @@
 			name = DKE;
 			sourceTree = "<group>";
 		};
+		A7E37CC91E3D42EF007B75EC /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				A7E37CCA1E3D42FC007B75EC /* Extensions.swift */,
+				A705F2381D8AE82D0020B773 /* User.swift */,
+				A765BAFB1D50D05C003785C8 /* DateService.swift */,
+				A7E37CCE1E3D71E5007B75EC /* Message.swift */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		A7F4491A1D5FC53A00CFF628 /* Cells */ = {
 			isa = PBXGroup;
 			children = (
@@ -184,8 +200,18 @@
 				A777C70B1D5C96D9006DE722 /* TextFieldCustomCell.swift */,
 				A77212181DA3489700A0504E /* MyCustomCell3.swift */,
 				A7F896621DC051AB00E9A971 /* SwitchTableViewCell.swift */,
+				A787B2761E3DBCF800BAC183 /* ChatMessageCell.swift */,
 			);
 			name = Cells;
+			sourceTree = "<group>";
+		};
+		D5A4E7FFF9ECF3819196E363 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3A75C3250644CC60024DA861 /* Pods-DKE.debug.xcconfig */,
+				218658951D7756A6E52E2EF5 /* Pods-DKE.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -195,12 +221,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A75AB2D81D4E3BDB008FBF00 /* Build configuration list for PBXNativeTarget "DKE" */;
 			buildPhases = (
-				E56314A95FBACBA31B367DF6 /* [CP] Check Pods Manifest.lock */,
+				0E34A61AA122088F6E9C2610 /* [CP] Check Pods Manifest.lock */,
 				A75AB2C21D4E3BD9008FBF00 /* Sources */,
 				A75AB2C31D4E3BD9008FBF00 /* Frameworks */,
 				A75AB2C41D4E3BD9008FBF00 /* Resources */,
-				2A3F80038BFF68A433B1E065 /* [CP] Embed Pods Frameworks */,
-				8647C6176D0FD4BF398E3BC4 /* [CP] Copy Pods Resources */,
+				3C3AA77F2AA36F24091E3797 /* [CP] Embed Pods Frameworks */,
+				949C96166710AA3B86C41E6E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -270,7 +296,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2A3F80038BFF68A433B1E065 /* [CP] Embed Pods Frameworks */ = {
+		0E34A61AA122088F6E9C2610 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		3C3AA77F2AA36F24091E3797 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -285,7 +326,7 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DKE/Pods-DKE-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		8647C6176D0FD4BF398E3BC4 /* [CP] Copy Pods Resources */ = {
+		949C96166710AA3B86C41E6E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -298,21 +339,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-DKE/Pods-DKE-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E56314A95FBACBA31B367DF6 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -328,8 +354,10 @@
 				A73ED1BE1D626E47009AC762 /* MainTabBarViewController.swift in Sources */,
 				A73ED1C21D63B205009AC762 /* DatePickerPageViewController.swift in Sources */,
 				A79547CB1DB83A3D008E7226 /* EditProfilTableViewController.swift in Sources */,
+				A7E37CCF1E3D71E5007B75EC /* Message.swift in Sources */,
 				A75AB2E21D4E8FBF008FBF00 /* HomePageViewController.swift in Sources */,
 				A705F2461D8F479C0020B773 /* SWRevealViewController.m in Sources */,
+				A7E37CCD1E3D59C8007B75EC /* NewMessageController.swift in Sources */,
 				A75AB2DE1D4E5A27008FBF00 /* SignUpPageViewController.swift in Sources */,
 				A77DF9011E0EE0D500D62AD4 /* DiscussionTableViewController.swift in Sources */,
 				A78F609F1DA5839E00A8C136 /* WelcomePageTableViewController.swift in Sources */,
@@ -339,8 +367,11 @@
 				A705F2481D8F4DEF0020B773 /* BackTableViewController.swift in Sources */,
 				A75AB2CC1D4E3BDB008FBF00 /* ViewController.swift in Sources */,
 				A705F24C1D91862A0020B773 /* HistoryDataViewController.swift in Sources */,
+				A787B2771E3DBCF800BAC183 /* ChatMessageCell.swift in Sources */,
 				A777C70C1D5C96D9006DE722 /* TextFieldCustomCell.swift in Sources */,
 				A77212191DA3489A00A0504E /* MyCustomCell3.swift in Sources */,
+				A7E37CCB1E3D42FC007B75EC /* Extensions.swift in Sources */,
+				A7E37CC61E3D267B007B75EC /* MessagesTableViewController.swift in Sources */,
 				A75AB2E41D4E9699008FBF00 /* LoginPageViewController.swift in Sources */,
 				A7F896631DC051AB00E9A971 /* SwitchTableViewCell.swift in Sources */,
 				A7A23B661DC44717001047BB /* ReminderSelectionTableViewController.swift in Sources */,
@@ -349,6 +380,7 @@
 				A765BAFC1D50D05C003785C8 /* DateService.swift in Sources */,
 				A7F8E9A71D577EEA00DA348A /* MyCustomCell2.swift in Sources */,
 				A765BAFE1D50E2A6003785C8 /* SearchPage.swift in Sources */,
+				A7E37CC41E3D23A2007B75EC /* ChatLogController.swift in Sources */,
 				A75AB2CA1D4E3BDB008FBF00 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -470,7 +502,7 @@
 		};
 		A75AB2D91D4E3BDB008FBF00 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DB4A833322E3A95F8B4BF188 /* Pods-DKE.debug.xcconfig */;
+			baseConfigurationReference = 3A75C3250644CC60024DA861 /* Pods-DKE.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DKE/DKE.entitlements;
@@ -490,7 +522,7 @@
 		};
 		A75AB2DA1D4E3BDB008FBF00 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5F87A05E0C7D28E17D2AB1BD /* Pods-DKE.release.xcconfig */;
+			baseConfigurationReference = 218658951D7756A6E52E2EF5 /* Pods-DKE.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = DKE/DKE.entitlements;

@@ -71,7 +71,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
     static var isReminderCustom = false
     static var tblPostData2 : UITableView?
     
-    static var selectedUsers : [String]?
+    static var selectedUsers = [String]()
     
     
     override func viewDidLoad() {
@@ -325,7 +325,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
                 }
                 else {
                     
-                    cell?.textLabel!.text = "\((CreateEventPageViewController.selectedUsers)!.count) users selected "
+                    cell?.textLabel!.text = "\((CreateEventPageViewController.selectedUsers).count) users selected "
                 }
             }
             cell?.accessoryType = UITableViewCellAccessoryType.disclosureIndicator
@@ -541,7 +541,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
                     let committee = CreateEventPageViewController.currentReminder!
                     
                     if (data[committee] != nil){
-                        CreateEventPageViewController.selectedUsers = (data[committee])?["Members"] as! [String]?
+                        CreateEventPageViewController.selectedUsers = ((data[committee])?["Members"] as! [String]?)!
                     }
                     else {
                          CreateEventPageViewController.selectedUsers = []
@@ -616,7 +616,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
                 }
                 
                 
-                Data.ref.child("Events").child(eventTitle).updateChildValues(["eventTitle" :eventTitle, "startDate" : startDateString, "endDate": endDateString, "location" : location, "Creator" : name, "Reminder" : CreateEventPageViewController.currentReminder!,"usersToRemind" : CreateEventPageViewController.selectedUsers!, "Day" : String(eventDay), "Month" : month])
+                Data.ref.child("Events").child(eventTitle).updateChildValues(["eventTitle" :eventTitle, "startDate" : startDateString, "endDate": endDateString, "location" : location, "Creator" : name, "Reminder" : CreateEventPageViewController.currentReminder!,"usersToRemind" : CreateEventPageViewController.selectedUsers, "Day" : String(eventDay), "Month" : month])
                 
                 
                 Data.ref.child("users").child(Data.userID!).observeSingleEvent(of: FIRDataEventType.value, with: { (snapshot) -> Void in
@@ -722,7 +722,7 @@ class CreateEventPageViewController: UIViewController, UITableViewDelegate, UITa
 
     func finishedPost(){
         // we restore all the variables to all the original values
-        CreateEventPageViewController.selectedUsers = nil
+        CreateEventPageViewController.selectedUsers = []
         CreateEventPageViewController.isReminderCustom = false
         CreateEventPageViewController.startStrEventDate = ""
         CreateEventPageViewController.endStrEventDate = ""

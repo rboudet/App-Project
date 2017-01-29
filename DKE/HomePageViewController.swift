@@ -29,7 +29,7 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     @IBOutlet weak var SnapchatLabel: UILabel!
     
     
-    static var justEditedProfil : Bool?
+    var justEditedProfil = false
     static var isReady = false
     
     
@@ -200,11 +200,11 @@ class HomePageViewController: UIViewController, UITableViewDelegate, UITableView
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if(HomePageViewController.justEditedProfil != nil && HomePageViewController.justEditedProfil!){
-            let banner = Banner(title: "Changes Saved", subtitle: "", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:48.00/255.0, green:174.0/255.0, blue:51.5/255.0, alpha:1.000))
+        if(EditProfilTableViewController.hasChanged){
+            let banner = Banner(title: "Changes Saved", subtitle: "", image: nil, backgroundColor: UIColor(red:48.00/255.0, green:174.0/255.0, blue:51.5/255.0, alpha:1.000))
             banner.dismissesOnTap = true
             banner.show(duration: 3.0)
-            HomePageViewController.justEditedProfil = false
+            EditProfilTableViewController.hasChanged  = false
         }
         isEditingHobbies = false
         isEditingInterests = false

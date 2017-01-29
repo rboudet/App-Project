@@ -8,11 +8,12 @@
 
 import Foundation
 
-class CurrentUser{
+class User{
     var firstName : String?
     var lastName : String?
     var fullName : String?
     var email : String?
+    var uid : String?
     var major = "Not Provided"
     var faculty = "Not Provided"
     var profilePicture : UIImage?
@@ -24,15 +25,20 @@ class CurrentUser{
     var currentProject = "Not Provided"
     var isChair = false
     var isActive = false
+    var firstLetter : String?
     
-    init(Lastname : String, Firstname : String, email: String, major: String, faculty : String, profilePic : UIImage){
+    init(Lastname : String, Firstname : String, email: String, major: String, profilePic : UIImage, uid : String){
         self.firstName = Firstname
         self.lastName = Lastname
         self.email = email
         self.major = major
-        self.faculty = faculty
         self.profilePicture = profilePic
         self.fullName = Firstname + " " + Lastname
+        self.uid = uid
+        let firstChar = Firstname[Firstname.startIndex]
+        let firstLetter = String(firstChar).uppercased()
+        self.firstLetter = firstLetter
+
     }
     
     init(Lastname : String, Firstname : String, email: String){
@@ -40,6 +46,18 @@ class CurrentUser{
         self.lastName = Lastname
         self.email = email
         self.fullName = Firstname + " " + Lastname
+        let firstChar = Firstname[Firstname.startIndex]
+        let firstLetter = String(firstChar).uppercased()
+        self.firstLetter = firstLetter
+    }
+    
+    init(fullName : String, uid: String, photo : UIImage){
+        self.uid = uid
+        self.fullName = fullName
+        self.profilePicture = photo
+        let firstChar = fullName[fullName.startIndex]
+        let firstLetter = String(firstChar).uppercased()
+        self.firstLetter = firstLetter
     }
     
     func setPhoto(_ photo : UIImage){
@@ -76,6 +94,10 @@ class CurrentUser{
     }
     func setActive (_ isActive : Bool){
         self.isActive = isActive
+    }
+    
+    func setUid(uid : String){
+        self.uid = uid
     }
 
 }

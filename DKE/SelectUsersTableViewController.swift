@@ -12,7 +12,8 @@ class SelectUsersTableViewController: UITableViewController {
 
     
     @IBOutlet var usersTableView: UITableView!
-    var users = [[String : String]]()
+    
+    var users = [User]()
     static var selectedUsers : [String]?
     var sections : [String]?
     
@@ -21,7 +22,7 @@ class SelectUsersTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // we retreive the users and the sections for the seachPage, as we have already retreived all the info and put them in there.
-        users = SearchPage.dict
+        users = SearchPage.users
         sections = SearchPage.sections
         
         // here we create a button in the navigation bar either to select all the users, or unselect all the users
@@ -45,10 +46,13 @@ class SelectUsersTableViewController: UITableViewController {
         }else {
             // here we want to select the users
             for i in 0...users.count-1{
-                if(!(SelectUsersTableViewController.selectedUsers?.contains(self.users[i]["uid"]!))!){
-                    // then we want to add it
-                    SelectUsersTableViewController.selectedUsers?.append(self.users[i]["uid"]!)
+                // we check if it is in in the selected users already or not
+                if (SelectUsersTableViewController.selectedUsers?.filter({ el in el == self.users[i].uid }).count)! > 0 {
                 }
+                else{
+                    SelectUsersTableViewController.selectedUsers?.append(self.users[i].uid!)
+                }
+            
             }
             
         }
@@ -85,7 +89,7 @@ class SelectUsersTableViewController: UITableViewController {
             let letter = sections?[section]
             for i in 0...users.count-1{
                 
-                if(users[i]["firstLetter"]!.caseInsensitiveCompare(letter!) == ComparisonResult.orderedSame){
+                if(users[i].firstLetter!.caseInsensitiveCompare(letter!) == ComparisonResult.orderedSame){
                     number = number + 1
                     // we count how many names start with the letter so that we know many cells are going to be needed
                 }
@@ -117,27 +121,25 @@ class SelectUsersTableViewController: UITableViewController {
         let cell = self.tableView.dequeueReusableCell(withIdentifier: "SelectionUser") as! MyCustomCell
         cell.cellLabel.isHidden = true
         let sectionNumber = indexPath.section
-        while(!(users[index]["firstLetter"]!.caseInsensitiveCompare(sections![sectionNumber]) == ComparisonResult.orderedSame) && index < users.count){
+        while(!(users[index].firstLetter!.caseInsensitiveCompare(sections![sectionNumber]) == ComparisonResult.orderedSame) && index < users.count){
                 index = index + 1
         // once we change sections, we get the index of the first name that has the same letter as the section
         }
-            
-        if(users[index + indexPath.row]["firstLetter"]!.caseInsensitiveCompare((sections?[sectionNumber
+        let user = users[index + indexPath.row]
+        if(user.firstLetter!.caseInsensitiveCompare((sections?[sectionNumber
             ])!) == ComparisonResult.orderedSame && index < users.count){
                 
-            cell.cellTitle.text = users[index + indexPath.row]["name"]
-            cell.cellSubtitle.text = users[index + indexPath.row]["major"]
-            cell.cellLabel.text = users[index + indexPath.row]["uid"]
-            if(SelectUsersTableViewController.selectedUsers?.contains(users[index + indexPath.row]["uid"]!))!{
+            cell.cellTitle.text = user.fullName
+            cell.cellSubtitle.text = user.major
+            cell.cellLabel.text = user.uid!
+            if (SelectUsersTableViewController.selectedUsers?.filter({ el in el == user.uid! }).count)! > 0 {
                 cell.SelectUser.isOn = true
             }
             else{
                 cell.SelectUser.isOn = false
             }
             
-            let dataDecoded = Foundation.Data(base64Encoded: users[index + indexPath.row]["EncodedString"]!, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)!
-                
-            let profilePhoto = UIImage(data: dataDecoded)
+            let profilePhoto = user.profilePicture!
                 
                 
             cell.cellProfilePicture.layer.borderWidth = 1
@@ -156,7 +158,7 @@ class SelectUsersTableViewController: UITableViewController {
         var index = 0
         var indexPath : IndexPath?
         var cell : MyCustomCell?
-        var newSelectedUsers:[String] = []
+        var newSelectedUsers = [String]()
         while(true){
             while(true){
                 indexPath = NSIndexPath(row: index, section: section) as IndexPath
@@ -166,7 +168,8 @@ class SelectUsersTableViewController: UITableViewController {
                 }
                 else {
                     if (cell?.SelectUser.isOn)!{
-                        newSelectedUsers.append((cell?.cellLabel.text!)!)
+                        let uid = cell?.cellLabel.text!
+                        newSelectedUsers.append(uid!)
                     }
                 }
                 index = index + 1

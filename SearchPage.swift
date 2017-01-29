@@ -22,16 +22,12 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
     
     static var sections = [] as [String]
     var currentCell = MyCustomCell.init(style: .default, reuseIdentifier: "cell")
-    static var dict = [[String:String]]()
-    var users = [] as [String]
-    var majors = [] as [String]
-    var uid : [String]?
-    var names = [] as [String]
+    static var users = [User]()
     var index = 0
     var test2 = "false" as String
     var list = [] as [String]
     var isSearching = false
-    var searchDict = [[String:String]]()
+    var searchDict = [User]()
     var searchSections = [] as [String]
     var presentSearchBar : UISearchBar?
     
@@ -47,7 +43,8 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         searchBar.delegate = self
         searchBar.inputAccessoryView = self.SearchToolbar
         self.presentSearchBar = searchBar
-        self.NavigationBar.titleView = searchBar
+        self.navigationItem.titleView = searchBar
+       // self.NavigationBar.titleView = searchBar
         
         
         
@@ -55,11 +52,18 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         ListOfUsers.delegate  = self
         ListOfUsers.dataSource = self
         
-        if (self.revealViewController() != nil){
+        if (!Data.isSelectingUsers){
+            if (self.revealViewController() != nil){
             
-            Open.target = self.revealViewController()
-            Open.action = #selector(SWRevealViewController.revealToggle(_:))
-            self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+                Open.target = self.revealViewController()
+                Open.action = #selector(SWRevealViewController.revealToggle(_:))
+                self.view.addGestureRecognizer(self.revealViewController().panGestureRecognizer())
+            }
+        }
+        else {
+            // we want to set the left bar button to be a cancel button
+            let barButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(handleCancel))
+            self.navigationItem.leftBarButtonItem = barButton
         }
         
         let width = self.ListOfUsers.frame.width
@@ -84,10 +88,17 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         Data.ref.child("users").observe(.childChanged, with: { (snapshot) -> Void in
             
             let data = snapshot.value as! [String : AnyObject]
-            for i in 0...SearchPage.dict.count-1{
-                if (SearchPage.dict[i]["name"]! == (data["firstName"] as! String) + " " + (data["lastName"] as! String)){
-                    SearchPage.dict[i]["major"] = data["major"] as? String
-                    SearchPage.dict[i]["EncodedString"] = data["ProfilePicture"] as? String
+            for i in 0...SearchPage.users.count-1{
+                let user = SearchPage.users[i]
+                if(user.fullName! == (data["firstName"] as! String) + " " + (data["lastName"] as! String)){
+                    user.major = (data["major"] as? String)!
+                    if( user.encodedString != data["ProfilePicture"] as? String){
+                        let photoString = data["ProfilePicture"] as? String
+                        let decodedData = Foundation.Data(base64Encoded: photoString!, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+                        let decodedImage = UIImage(data: decodedData!)
+                        user.profilePicture = decodedImage
+                        user.encodedString = photoString!
+                    }
                 }
             }
             
@@ -100,6 +111,11 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         
     }
     
+    func handleCancel() {
+        Data.isSelectingUsers = false
+        self.performSegue(withIdentifier: "BackToMessages", sender: nil)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
 
@@ -109,11 +125,11 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         var number = 0
         SearchPage.sections = SearchPage.sections.sorted(by: {$0 < $1})
         // we sorte the section array, to have the sections in alphabetical order
-        if(SearchPage.dict.count != 0 && test2 != "true"){
+        if(SearchPage.users.count != 0 && test2 != "true"){
             let letter = SearchPage.sections[section]
-            for i in 0...SearchPage.dict.count-1{
-                
-                if(SearchPage.dict[i]["firstLetter"]!.caseInsensitiveCompare(letter) == ComparisonResult.orderedSame){
+            for i in 0...SearchPage.users.count-1{
+                let user = SearchPage.users[i]
+                if(user.firstLetter!.caseInsensitiveCompare(letter) == ComparisonResult.orderedSame){
                     number = number + 1
                     // we count how many names start with the letter so that we know many cells are going to be needed
                 }
@@ -126,7 +142,7 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
     
     
     override func tableView(_ tableView : UITableView, cellForRowAt indexPath : IndexPath) -> UITableViewCell{
-        var currentDict = [[String:String]]()
+        var currentDict = [User]()
         var currentSection = [] as [String]
         index = 0
         let cell:MyCustomCell = self.tableView.dequeueReusableCell(withIdentifier: "UserCell") as! MyCustomCell
@@ -138,27 +154,26 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
             currentSection = self.searchSections
         }
         else {
-            currentDict = SearchPage.dict
+            currentDict = SearchPage.users
             currentSection = SearchPage.sections
         }
         
-        if(SearchPage.dict.count != 0){
-            while(!(currentDict[index]["firstLetter"]!.caseInsensitiveCompare(currentSection[sectionNumber]) == ComparisonResult.orderedSame) && index < currentDict.count){
+        if(SearchPage.users.count != 0){
+            while(!(currentDict[index].firstLetter!.caseInsensitiveCompare(currentSection[sectionNumber]) == ComparisonResult.orderedSame) && index < currentDict.count){
                 index = index + 1
                 
                 // once we change sections, we get the index of the first name that has the same letter as the section
             }
             
-            if(currentDict[index + (indexPath as NSIndexPath).row]["firstLetter"]!.caseInsensitiveCompare(currentSection[sectionNumber
+            let user = currentDict[index + (indexPath as NSIndexPath).row]
+            if(user.firstLetter!.caseInsensitiveCompare(currentSection[sectionNumber
                 ]) == ComparisonResult.orderedSame && index < currentDict.count){
                 
-                cell.cellTitle.text = currentDict[index + (indexPath as NSIndexPath).row]["name"]
-                cell.cellSubtitle.text = currentDict[index + (indexPath as NSIndexPath).row]["major"]
-                cell.cellLabel.text = currentDict[index + (indexPath as NSIndexPath).row]["uid"]
+                cell.cellTitle.text = user.fullName
+                cell.cellSubtitle.text = user.major
+                cell.cellLabel.text = user.uid
                 
-                let dataDecoded = Foundation.Data(base64Encoded: currentDict[index + (indexPath as NSIndexPath).row]["EncodedString"]!, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)!
-                
-                let profilePhoto = UIImage(data: dataDecoded)
+                let profilePhoto = user.profilePicture!
                 
 
                 cell.cellProfilePicture.layer.borderWidth = 1
@@ -216,6 +231,16 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
         // we set the current cell to be the cell that we are going to select
         return indexPath
     }
+    
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if(Data.isSelectingUsers){
+            Data.isSelectingUsers = !Data.isSelectingUsers
+            self.performSegue(withIdentifier: "BackToMessages", sender: nil)
+        }else {
+            self.performSegue(withIdentifier: "ViewProfile", sender: nil)
+        }
+        
+    }
  
     func searchDisplayControllerDidBeginSearch(_ controller: UISearchDisplayController) {
         self.isSearching = true
@@ -233,22 +258,23 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
             return
         }
         // Filter the array using the filter method
-        self.searchDict = [[String : String]]()
+        self.searchDict = [User]()
         self.searchSections = [] as [String]
         self.isSearching = true
-        if SearchPage.dict.count == 0 {
+        if SearchPage.users.count == 0 {
             return
         }
-        self.searchDict = SearchPage.dict.filter({( user: [String:String]) -> Bool in
+        
+        self.searchDict = SearchPage.users.filter({( user: User) -> Bool in
             // to start, let's just search by name
-            return (user["name"]!.lowercased().range(of: searchText.lowercased()) != nil) || (user["major"]!.lowercased().range(of: searchText.lowercased()) != nil)
+            return (user.fullName!.lowercased().range(of: searchText.lowercased()) != nil) || (user.major.lowercased().range(of: searchText.lowercased()) != nil)
         })
         
         if (self.searchDict.count > 0){
             for i in 0...self.searchDict.count - 1{
-                let firstLetter = self.searchDict[i]["firstLetter"]
-                if(!self.searchSections.contains(firstLetter!)){
-                    self.searchSections.append(firstLetter!)
+                let firstLetter = self.searchDict[i].firstLetter!
+                if(!self.searchSections.contains(firstLetter)){
+                    self.searchSections.append(firstLetter)
                 }
             }
         }
@@ -258,7 +284,7 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         self.isSearching = false
-        self.searchDict = [[String : String]]()
+        self.searchDict = [User]()
         SearchPage.sections = [] as [String]
         self.tableView.reloadData()
     }
@@ -278,11 +304,20 @@ class SearchPage: UITableViewController, UISearchBarDelegate, UISearchDisplayDel
     
     
     
+    var messageController : MessagesTableViewController?
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any!) {
         if (segue.identifier == "ViewProfile") {
            // let svc = segue.destination as! HomePageViewController;
             HomePageViewController.user = currentCell.cellLabel.text!
+        }
+        
+        if(segue.identifier == "BackToMessages"){
+            if let _ = currentCell.cellLabel {
+                // we create a user variable of the person that we have selected
+                let selectedUser = User(fullName: currentCell.cellTitle.text!, uid: currentCell.cellLabel.text!, photo: currentCell.cellProfilePicture.image!)
+                MessagesTableViewController.userSelected = selectedUser
+            }
         }
     }
     

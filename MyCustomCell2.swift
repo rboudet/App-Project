@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ReadMoreTextView
 
 class MyCustomCell2: UITableViewCell {
 
@@ -26,6 +27,9 @@ class MyCustomCell2: UITableViewCell {
     @IBOutlet weak var MessageLabel: UILabel!
     
     @IBOutlet weak var NameLabel: UILabel!
+    
+    @IBOutlet weak var ReadMoreTextView: ReadMoreTextView!
+   
     
 }
 

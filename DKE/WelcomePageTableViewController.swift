@@ -9,8 +9,7 @@
 
 import UIKit
 import Firebase
-import BRYXBanner
-
+//import BRYXBanner
 
 
 class WelcomePageTableViewController: UITableViewController {
@@ -58,14 +57,12 @@ class WelcomePageTableViewController: UITableViewController {
         
         // we want to set up a waiting system to make sure that all the user's info has been loaded, and that the user cannot do anything while the information has not been retreived
         
-        //print(Data.currentUser!)
-        
         // if an event has just been created succesfully, a green banner displays
         if (WelcomePageTableViewController.eventJustCreated){
-            let banner = Banner(title: "Success", subtitle: "The event has been added", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:48.00/255.0, green:174.0/255.0, blue:51.5/255.0, alpha:1.000))
+           /* let banner = Banner(title: "Success", subtitle: "The event has been added", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:48.00/255.0, green:174.0/255.0, blue:51.5/255.0, alpha:1.000))
             banner.dismissesOnTap = true
             banner.show(duration: 3.0)
-            WelcomePageTableViewController.eventJustCreated = false
+            WelcomePageTableViewController.eventJustCreated = false */
         }
         
         
@@ -91,18 +88,21 @@ class WelcomePageTableViewController: UITableViewController {
         
         // here we go fetch all the information about the users and store it in a dictionary, to be able to use it at different places in the app
         
-        if(SearchPage.dict.count == 0){
+        
             // we check if we have not already filled the data structure with the users
-            
+
             Data.ref.child("users").observe(.childAdded, with: { (snapshot) -> Void in
                 let data = snapshot.value as! [String : AnyObject]
                 let firstName = data["firstName"] as! String
                 let lastName = data["lastName"] as! String
-                let name = firstName + " " + lastName
-                let firstChar = firstName[firstName.startIndex]
-                let firstLetter = String(firstChar).uppercased()
                 let uid = data["uid"] as! String
+                let email = data["email"] as! String
+                let photoString = data["ProfilePicture"] as! String
+                let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
+                let decodedImage = UIImage(data: decodedData!)
+            
                 // we check if the user is already in the data structure
+                
                 
                 let major : String?
                 if (data["major"] == nil){
@@ -112,18 +112,27 @@ class WelcomePageTableViewController: UITableViewController {
                     major = data["major"] as? String
                 }
                 
-                print(uid)
+                let user = User(Lastname: lastName, Firstname: firstName, email: email, major: major!, profilePic: decodedImage!, uid: uid)
+                user.encodedString = photoString
                 
-                SearchPage.dict.append(["firstLetter" : firstLetter, "uid": uid, "name" : name, "major" : major! , "EncodedString" : data["ProfilePicture"] as! String])
+                // we check if the user is already in the array or not
+                // if it isnt we add it, this resolves the bug of multiple copies of same user
+             
                 
-                SearchPage.dict = SearchPage.dict.sorted{($0["name"]!).localizedCompare($1["name"]!) == ComparisonResult.orderedAscending}
+                if SearchPage.users.filter({ el in el.uid == user.uid }).count > 0 {
+                }
+                else{
+                    SearchPage.users.append(user)
+                }
+                
+                SearchPage.users = SearchPage.users.sorted{($0.fullName!).localizedCompare($1.fullName!) == ComparisonResult.orderedAscending}
             
-                if(!SearchPage.sections.contains(firstLetter)){
-                    SearchPage.sections.append(firstLetter)
+                if(!SearchPage.sections.contains(user.firstLetter!)){
+                    SearchPage.sections.append(user.firstLetter!)
                     // we add in the sections array all the first letters of the names if they are not already in the array
                 }
             })
-        }
+        
 
         
         

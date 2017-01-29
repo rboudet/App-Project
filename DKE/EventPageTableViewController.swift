@@ -22,6 +22,9 @@ class EventPageTableViewController: UITableViewController {
     var usersName = [String]()
     var isReady = false
     
+     let text = "Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, end"
+   
+    
     var indexPathToEdit : IndexPath?
     
     static var willEdit = false
@@ -34,11 +37,17 @@ class EventPageTableViewController: UITableViewController {
     
     
     @IBOutlet var EventTableView: UITableView!
+    static var TableView : UITableView?
+    static var height : CGFloat?
     
    static var event = WelcomePageTableViewController.toPass
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        
+        EventPageTableViewController.TableView = EventTableView
+        EventPageTableViewController.height = 75.0
         
         self.navigationController?.navigationBar.isTranslucent = true
         
@@ -74,7 +83,10 @@ class EventPageTableViewController: UITableViewController {
                                 let data2 = snapshot.value as! [String : AnyObject]
                                 let firstName = data2["firstName"] as! String
                                 let lastName = data2["lastName"] as! String
-                                self.usersName.append(firstName + " "  + lastName)
+                                if (!self.usersName.contains(firstName + " "  + lastName)){
+                                    // only add it if it is not in it, otherwise it adds it again at each page reload
+                                    self.usersName.append(firstName + " "  + lastName)
+                                }
                                 
                                 if (i == self.users.count-1){
                                     self.isReady = true
@@ -97,7 +109,6 @@ class EventPageTableViewController: UITableViewController {
                 
             }
         })
-    
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -210,32 +221,39 @@ class EventPageTableViewController: UITableViewController {
                 }
                 else if (indexPath.row == 2){
                     if (elementSelected == 0){
+                        // this is the description of the event 
+                        //adding a read more / read less text view in case the description is too long 
+                        
                         cell = EventTableView.dequeueReusableCell(withIdentifier: "AboutCell") as! MyCustomCell2
+                        cell.ReadMoreTextView.text = text
+                        cell.ReadMoreTextView.readMoreText = " ... Read More"
+                        cell.ReadMoreTextView.readLessText = "Read Less"
+                        cell.ReadMoreTextView.tableView = EventTableView
                         
-                        let cellFrame = cell.frame
+                        let height = cell.ReadMoreTextView.contentSize.height / (cell.ReadMoreTextView.font?.lineHeight)!
                         
-                        let textView = ReadMoreTextView(frame: cellFrame)
-                        textView.text = "Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,Test to see if this works,Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works, Test to see if this works,"
-                        textView.shouldTrim = true
-                        textView.readMoreText = " ... Read More"
-                        textView.readLessText = "Read Less"
-                        textView.maximumNumberOfLines = 4
                         
-                        cell.addSubview(textView)
-                       /* cell2 = EventTableView.dequeueReusableCell(withIdentifier: "AboutCell")!
-                        cell2.textLabel?.text = "The creator of the event has not specified more information, contact him for more"
-                        let x = cell2.frame.maxX
-                        let y = cell2.frame.maxY
-                        
-                        cell2.textLabel?.font = UIFont(name: "Arial", size: 12.0)
-                        let button = UIButton(frame: CGRect(x: x-20, y: y-20, width: 20, height: 20))
-                        button.setTitle("see More", for: UIControlState.normal)
-                        cell2.addSubview(button)
-                        return cell2*/
+                        if(cell.ReadMoreTextView.isExpanded){
+                            EventTableView.estimatedRowHeight = height * 75 / 4
+                            cell.ReadMoreTextView.maximumNumberOfLines = 0
+                            cell.ReadMoreTextView.shouldTrim = false
+                        }
+                        else{
+                            EventTableView.estimatedRowHeight = 75.0
+                            cell.ReadMoreTextView.maximumNumberOfLines = 4
+                            cell.ReadMoreTextView.shouldTrim = true
+                            
+                        }
+
+
+ 
+                       
                     }
                     else{
+                        // this is when the user wants to write something on the event
                         cell = EventTableView.dequeueReusableCell(withIdentifier: "DiscussionCell") as! MyCustomCell2
                         cell.profilePicture.image = Data.currentUser?.profilePicture
+                        EventTableView.rowHeight = 70.0
                         
                     }
                 }
@@ -270,10 +288,23 @@ class EventPageTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         var height = 70.0
         let section = indexPath.section
-        if(section == 0 && indexPath.row == 1){
-            height = 27.0
+        if (section == 0){
+            
+            if(indexPath.row == 1){
+                height = 27.0
+            }
+                
+            else if(elementSelected == 0 && indexPath.row == 2){
+                print(EventTableView.estimatedRowHeight)
+                return UITableViewAutomaticDimension
+            }
+                
+            else if (elementSelected == 1 && indexPath.row == 2){
+                height = 70.0
+            }
         }
-        else if (indexPath.row > 2){
+        
+        if(section == 1){
             return UITableViewAutomaticDimension
         }
         
@@ -287,6 +318,8 @@ class EventPageTableViewController: UITableViewController {
         
         let section = indexPath.section
         let row = indexPath.row
+        
+        
         if(section == 1){
             let name = EventPageTableViewController.messages[row]["User"]
             if(Data.currentUser?.fullName == name){
@@ -371,7 +404,6 @@ class EventPageTableViewController: UITableViewController {
     }
     
     
-    
     @IBAction func SelectionIndexChanged(_ sender: Any) {
         let indexPath = IndexPath(row: 1, section: 0)
         let indexPath2 = IndexPath(row: 2, section: 0)
@@ -418,7 +450,6 @@ class EventPageTableViewController: UITableViewController {
     }
     */
 
-    
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         let svc = segue.destination as! DiscussionTableViewController

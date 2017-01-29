@@ -10,6 +10,6 @@ target 'DKE' do
     pod 'Firebase/Auth'
     pod 'Firebase/Database'
     pod 'Firebase/Core'
-    pod 'BRYXBanner'
     pod 'ReadMoreTextView'
+    pod 'BRYXBanner'
 end

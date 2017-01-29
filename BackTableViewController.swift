@@ -15,7 +15,7 @@ class BackTableViewController: UITableViewController {
     
     var isCommitteesDeployed = false
     var isDKEHistoryListOpen = false
-    var numberOfCells = 7
+    var numberOfCells = 8
     var DeployedCells = 0
     var DeployedCommitteeCells = 0
     var cellChosen = ""
@@ -104,8 +104,13 @@ class BackTableViewController: UITableViewController {
         }
         
         if( (indexPath as NSIndexPath).row == 6 + DeployedCells + DeployedCommitteeCells){
-            // Logout
+            // messages
             cell = tableView.dequeueReusableCell(withIdentifier: "cell8", for: indexPath) as UITableViewCell
+        }
+        
+        if( (indexPath as NSIndexPath).row == 7 + DeployedCells + DeployedCommitteeCells){
+            // Logout
+            cell = tableView.dequeueReusableCell(withIdentifier: "cell9", for: indexPath) as UITableViewCell
         }
     
         
@@ -126,7 +131,7 @@ class BackTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        if ((indexPath as NSIndexPath).row == 6 + DeployedCells + DeployedCommitteeCells){
+        if ((indexPath as NSIndexPath).row == 7 + DeployedCells + DeployedCommitteeCells){
             // the user decides to log out
             let alert = UIAlertController(title: "Logging out", message: "Are you sure you want to sign out of your account", preferredStyle: UIAlertControllerStyle.alert)
             
@@ -148,13 +153,13 @@ class BackTableViewController: UITableViewController {
                     isCommitteesDeployed = false
                     DeployedCommitteeCells = 0
                     self.DeployedCells = 4
-                    self.numberOfCells = 7 + DeployedCells
+                    self.numberOfCells = 8 + DeployedCells
                     LinkCellTableView.reloadData()
                 }
                 else{
                     isCommitteesDeployed = false
                     isDKEHistoryListOpen = false
-                    self.numberOfCells = 7
+                    self.numberOfCells = 8
                     self.DeployedCells = 0
                     self.DeployedCommitteeCells = 0
                     LinkCellTableView.reloadData()
@@ -186,7 +191,7 @@ class BackTableViewController: UITableViewController {
             else if (indexPath.row == 5 + DeployedCells){
                 if (!isCommitteesDeployed){
                 
-                    self.numberOfCells = 7 + self.committees.count
+                    self.numberOfCells = 8 + self.committees.count
                     isCommitteesDeployed = true
                     isDKEHistoryListOpen = false
                     self.DeployedCells = 0
@@ -197,7 +202,7 @@ class BackTableViewController: UITableViewController {
                     isCommitteesDeployed = false
                     isDKEHistoryListOpen = false
                     self.DeployedCells = 0
-                    self.numberOfCells = 7
+                    self.numberOfCells = 8
                     self.DeployedCommitteeCells = 0
                     LinkCellTableView.reloadData()
                 }
@@ -206,7 +211,7 @@ class BackTableViewController: UITableViewController {
             else {
                 isCommitteesDeployed = false
                 isDKEHistoryListOpen = false
-                self.numberOfCells = 7
+                self.numberOfCells = 8
                 self.DeployedCells = 0
                 self.DeployedCommitteeCells = 0
                 LinkCellTableView.reloadData()

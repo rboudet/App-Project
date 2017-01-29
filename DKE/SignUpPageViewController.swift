@@ -50,7 +50,7 @@ class SignUpPageViewController: UIViewController {
             if (error == nil){
                 
                 Data.userID = user?.uid
-                Data.currentUser = CurrentUser(Lastname: lastName!, Firstname: firstName!, email: email!)
+                Data.currentUser = User(Lastname: lastName!, Firstname: firstName!, email: email!)
                 Data.ref.child("users").child(Data.userID!).updateChildValues(["firstName": firstName!, "lastName" : lastName!, "email": email!, "uid": Data.userID!])
                 
                 Data.ref.child("users").child(Data.userID!).observe(FIRDataEventType.value, with: { (snapshot) in

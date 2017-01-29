@@ -9,7 +9,7 @@
 import UIKit
 import Firebase
 import SystemConfiguration
-import BRYXBanner
+//import BRYXBanner
 
 
 
@@ -31,27 +31,28 @@ class LoginPageViewController: UIViewController{
 
  
     }
-    
     override func viewDidAppear(_ animated: Bool) {
-        if (!LoginPageViewController.connectedToNetwork()){
+       if (!LoginPageViewController.connectedToNetwork()){
       
-            let banner = Banner(title: "No Internet Connection", subtitle: "", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:174.00/255.0, green:48.0/255.0, blue:51.5/255.0, alpha:1.000))
+          /*  let banner = Banner(title: "No Internet Connection", subtitle: "", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:174.00/255.0, green:48.0/255.0, blue:51.5/255.0, alpha:1.000))
             banner.dismissesOnTap = true
             banner.show(duration: 10.0)
             
-            return
+            return*/
 
         }
         else {
-            FIRAuth.auth()?.addStateDidChangeListener { auth, user in
+           FIRAuth.auth()?.addStateDidChangeListener { auth, user in
                 if(user != nil){
+                    
                     
                     // if the user is already logged in, we go straight in the app
                     self.activityIndicator()
                     self.indicator.startAnimating()
-                    
-                    self.loadInformation()
-
+                    Data.user = user
+                    Data.userID = user?.uid
+                    self.loadInformation(ID: (user?.uid)!)
+                  
                 }
             }
 
@@ -105,10 +106,10 @@ class LoginPageViewController: UIViewController{
     static func checkConnection() -> Bool{
         var answer = true
         if(!connectedToNetwork()){
-            let banner = Banner(title: "No internet Connection", subtitle: "", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:174.00/255.0, green:48.0/255.0, blue:51.5/255.0, alpha:1.000))
+           /* let banner = Banner(title: "No internet Connection", subtitle: "", image: UIImage(named: "AppIcon"), backgroundColor: UIColor(red:174.00/255.0, green:48.0/255.0, blue:51.5/255.0, alpha:1.000))
             banner.dismissesOnTap = true
             banner.show(duration: 10.0)
-            answer = false
+            answer = false */
         }
         return answer
         
@@ -130,8 +131,9 @@ class LoginPageViewController: UIViewController{
                 else {
                     Data.user = user
                     Data.userID = user?.uid
-                    
-                    self.loadInformation()
+                    self.activityIndicator()
+                    self.indicator.startAnimating()
+                    self.loadInformation(ID: Data.userID!)
                     
                 }
             }
@@ -147,26 +149,22 @@ class LoginPageViewController: UIViewController{
     }
     
     
-    func loadInformation(){
-        Data.ref.child("users").child(Data.userID!).observe(FIRDataEventType.value, with: { (snapshot) in
+    func loadInformation(ID : String){
+        
+        Data.ref.child("users").child(ID).observe(FIRDataEventType.value, with: { (snapshot) in
             // we display the info that the user has already put on his profil
             let data = snapshot.value as! [String : AnyObject]
             let email = data["email"] as! String
             let firstName = data["firstName"] as! String
             let lastName = data["lastName"] as! String
-            
-            Data.currentUser = CurrentUser(Lastname: lastName, Firstname: firstName, email: email)
-            
-            
+            Data.setCurrentUser(firstName: firstName, lastName: lastName, email: email)
             
             if( data["ProfilePicture"] != nil){
                 let photoString = data["ProfilePicture"] as! String
                 Data.currentUser?.setEncodedString(photoString)
                 let decodedData = Foundation.Data(base64Encoded: photoString, options: NSData.Base64DecodingOptions.ignoreUnknownCharacters)
                 let decodedImage = UIImage(data: decodedData!)
-                
-                print(photoString)
-                
+                            
                 Data.currentUser?.setPhoto(decodedImage!)
                 _ = Data.currentUser
                 
@@ -205,14 +203,17 @@ class LoginPageViewController: UIViewController{
             if(data["Chair"] != nil){
                 Data.currentUser?.setChair(data["Chair"] as! Bool)
             }
-            
+            Data.currentUser?.setUid(uid: Data.userID!)
            
 
             
             // here we ensure that the data has been retreived before we can display it
             HomePageViewController.isReady = true
             HomePageViewController.load()
-            self.performSegue(withIdentifier: "FirstSegue", sender: nil)
+            
+           
+           self.performSegue(withIdentifier: "FirstSegue", sender: nil)
+     
 
         })
 
