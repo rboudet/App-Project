@@ -1,6 +1,0 @@
-framework module Pods_DKE {
-  umbrella header "Pods-DKE-umbrella.h"
-
-  export *
-  module * { export * }
-}

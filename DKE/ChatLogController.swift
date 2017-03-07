@@ -31,22 +31,23 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
         collectionView?.alwaysBounceVertical = true
         observeMessages()
         collectionView?.backgroundColor = UIColor.white
-        setUpInputComponents()
+       // setUpInputComponents()
         let name = ChatLogController.user?.fullName
         let photo =  ChatLogController.user?.profilePicture
         
         collectionView?.register(ChatMessageCell.self, forCellWithReuseIdentifier: "cellId")
-        setUpKeyBoardObserves()
+       // setUpKeyBoardObserves()
         setUpNavBar(name: name!, photo: photo!)
         MessagesTableViewController.userSelected = nil
         
         
     }
     
-   /*lazy var inputContainerView : UIView? = {
+   lazy var inputContainerView : UIView? = {
+    
         let containerView = UIView()
         containerView.frame = CGRect(x: 0, y: 0, width: self.view.frame.width, height: 50)
-        containerView.backgroundColor = UIColor.gray
+        containerView.backgroundColor = UIColor.white
     
         let sendButton = UIButton(type: .system)
     
@@ -81,10 +82,9 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
         seperatorLineView.widthAnchor.constraint(equalTo: containerView.widthAnchor).isActive = true
         seperatorLineView.heightAnchor.constraint(equalToConstant: 0.7).isActive = true
     
-        containerView.becomeFirstResponder()
     
         return containerView
-    }()*/
+    }()
     
  
     override func viewDidDisappear(_ animated: Bool) {
@@ -93,13 +93,25 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
         NotificationCenter.default.removeObserver(self)
     }
     
+    override var inputAccessoryView: UIView? {
+        get {
+            return inputContainerView
+        }
+    }
+    
+    override var canBecomeFirstResponder: Bool{
+        get{
+            return true
+        }
+    }
+    
     
     var messages = [Message]()
     
     func observeMessages(){
         // fetch all the messages we need from the user
         
-        let _ = Data.ref.child("user-message").child(Data.userID!).observe(.childAdded, with: { (snapshot) in
+        let _ = Data.ref.child("user-message").child(Data.userID!).child((ChatLogController.user?.uid)!).observe(.childAdded, with: { (snapshot) in
             // we retrive the message id to find the name of the recipient
             let messageId = snapshot.key
             let _ = Data.ref.child("Messages").child(messageId).observe(FIRDataEventType.value, with: { (snapshot) in
@@ -127,19 +139,13 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
     func setUpKeyBoardObserves() {
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillShow), name: .UIKeyboardDidShow, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillHide), name: .UIKeyboardDidHide, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(handleKeyboardWillChange), name: .UIKeyboardWillChangeFrame, object: nil)
         
     }
     
-    func handleKeyboardWillChange(notification : NSNotification){
-        // need to hide the container View
-        self.containerView!.isHidden = true
-        
-    }
+  
     
     func handleKeyboardWillShow(notification : NSNotification){
         let keyboardFrame = (notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as AnyObject).cgRectValue
-        self.containerView!.isHidden = false
         // we need tomove the textfield up
         containerViewBottomAnchor?.constant = -keyboardFrame!.height
         let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
@@ -148,7 +154,6 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
         })
     }
     func handleKeyboardWillHide(notification : NSNotification){
-        self.containerView!.isHidden = false
         containerViewBottomAnchor?.constant = 0
         let keyboardDuration = (notification.userInfo?[UIKeyboardAnimationDurationUserInfoKey] as AnyObject).doubleValue
         UIView.animate(withDuration: keyboardDuration!, animations: {
@@ -174,7 +179,9 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
         // we want to modify the width
        
         cell.bubbleWidthAnchor?.constant = estimatedFrameForText(text: message.text!).width + 32
-        
+    
+        let lastIndex = IndexPath(item: messages.count-1, section: 0)
+        collectionView.scrollToItem(at: lastIndex, at: UICollectionViewScrollPosition.bottom, animated: false)
         return cell
     }
     
@@ -227,9 +234,9 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
         let titleView = UIView()
         titleView.frame = CGRect(x: 0, y: 0, width: 100, height: 40)
         
-        let containerView = UIView()
-        titleView.addSubview(containerView)
-        containerView.translatesAutoresizingMaskIntoConstraints = false
+        let containerView2 = UIView()
+        titleView.addSubview(containerView2)
+        containerView2.translatesAutoresizingMaskIntoConstraints = false
         
         let profilePic = UIImageView()
         profilePic.translatesAutoresizingMaskIntoConstraints = false
@@ -237,30 +244,30 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
         profilePic.layer.cornerRadius = 20
         profilePic.clipsToBounds = true
         profilePic.image = photo
-        containerView.addSubview(profilePic)
+        containerView2.addSubview(profilePic)
         
         
         // ios9 constraint anchors
-        profilePic.leftAnchor.constraint(equalTo: containerView.leftAnchor).isActive = true
-        profilePic.centerYAnchor.constraint(equalTo: containerView.centerYAnchor).isActive = true
+        profilePic.leftAnchor.constraint(equalTo: containerView2.leftAnchor).isActive = true
+        profilePic.centerYAnchor.constraint(equalTo: containerView2.centerYAnchor).isActive = true
         profilePic.widthAnchor.constraint(equalToConstant: 40).isActive = true
         profilePic.heightAnchor.constraint(equalToConstant: 40).isActive = true
         
         
         
         let nameLabel = UILabel()
-        containerView.addSubview(nameLabel)
+        containerView2.addSubview(nameLabel)
         
         nameLabel.text = name
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
         
         nameLabel.leftAnchor.constraint(equalTo: profilePic.rightAnchor, constant: 8).isActive = true
         nameLabel.centerYAnchor.constraint(equalTo: profilePic.centerYAnchor).isActive = true
-        nameLabel.rightAnchor.constraint(equalTo: containerView.rightAnchor).isActive = true
+        nameLabel.rightAnchor.constraint(equalTo: containerView2.rightAnchor).isActive = true
         nameLabel.heightAnchor.constraint(equalTo: profilePic.heightAnchor).isActive = true
         
-        containerView.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
-        containerView.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
+        containerView2.centerXAnchor.constraint(equalTo: titleView.centerXAnchor).isActive = true
+        containerView2.centerYAnchor.constraint(equalTo: titleView.centerYAnchor).isActive = true
         
         
         self.navigationItem.titleView = titleView
@@ -270,9 +277,6 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
     var containerViewBottomAnchor : NSLayoutConstraint?
     
     var containerView : UIView?
-    
-    
-    
     
     func setUpInputComponents() {
         containerView = UIView()
@@ -329,10 +333,11 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
     func handleSend(){
         
         // we save the info about the message in the main message folder
-        
+        let toID = (ChatLogController.user)!.uid!
+        let fromID = (Data.userID)!
         let timeStamp :Int = Int(NSDate().timeIntervalSince1970)
         let childRef = Data.ref.child("Messages").childByAutoId()
-        let values = ["text" : inputTextField.text!, "toID" : (ChatLogController.user)!.uid!, "fromID" : (Data.userID)!, "timeStamp" : timeStamp] as [String : Any]
+        let values = ["text" : inputTextField.text!, "toID" : toID , "fromID" : fromID , "timeStamp" : timeStamp] as [String : Any]
         childRef.updateChildValues(values) { (error, ref) in
             if error != nil {
                 return
@@ -341,8 +346,9 @@ class ChatLogController : UICollectionViewController, UITextFieldDelegate, UICol
             self.inputTextField.text = nil
             let userMessageRef = Data.ref.child("user-message")
             let messageId = childRef.key
-            userMessageRef.child(Data.userID!).updateChildValues([messageId : 1])
-            userMessageRef.child((ChatLogController.user)!.uid!).updateChildValues([messageId : 1])
+            // we save the messages in different nodes corresponding to the person it is going to / person sending
+            userMessageRef.child(fromID).child(toID).updateChildValues([messageId : 1])
+            userMessageRef.child(toID).child(fromID).updateChildValues([messageId : 1])
         }
         
         childRef.updateChildValues(values)

@@ -89,7 +89,6 @@ class MessagesTableViewController: UITableViewController {
     var timer : Timer?
     func handleReloadTable() {
         DispatchQueue.main.async( execute: {
-            print("we reload")
             self.tableView.reloadData()
         })
 
